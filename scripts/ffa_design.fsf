@@ -267,7 +267,7 @@ set fmri(totalVoxels) 34944000
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "##BASEPATH##/sub-02/dicoms_func_task-oneback_run-1_20140425155335_401"
+set feat_files(1) "##BASEPATH##/sub-02/func"
 
 # Add confound EVs text file
 set fmri(confoundevs) 0
