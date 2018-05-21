@@ -30,7 +30,7 @@ set fmri(featwatcher_yn) 0
 set fmri(sscleanup_yn) 0
 
 # Output directory
-set fmri(outputdir) "##BASEPATH##/1stlvl_glm"
+set fmri(outputdir) "##BASEPATH##/##SUB##/1stlvl_glm"
 
 # TR(s)
 set fmri(tr) 2.000001 
@@ -267,7 +267,7 @@ set fmri(totalVoxels) 34944000
 set fmri(ncopeinputs) 0
 
 # 4D AVW data or FEAT directory (1)
-set feat_files(1) "##BASEPATH##/sub-02/func"
+set feat_files(1) "##BASEPATH##/inputs/rawdata/##SUB##/func/##SUB##_task-oneback_run-01_bold"
 
 # Add confound EVs text file
 set fmri(confoundevs) 0
@@ -304,7 +304,7 @@ set fmri(tempfilt_yn1) 1
 set fmri(deriv_yn1) 1
 
 # Custom EV file (EV 1)
-set fmri(custom1) "##BASEPATH##/sub-02/onsets/run-1/face.txt"
+set fmri(custom1) "##BASEPATH##/##SUB##/onsets/run-1/face.txt"
 
 # Orthogonalise EV 1 wrt EV 0
 set fmri(ortho1.0) 0
@@ -359,7 +359,7 @@ set fmri(tempfilt_yn2) 1
 set fmri(deriv_yn2) 1
 
 # Custom EV file (EV 2)
-set fmri(custom2) "##BASEPATH##/sub-02/onsets/run-1/house.txt"
+set fmri(custom2) "##BASEPATH##/##SUB##/onsets/run-1/house.txt"
 
 # Orthogonalise EV 2 wrt EV 0
 set fmri(ortho2.0) 0
@@ -414,7 +414,7 @@ set fmri(tempfilt_yn3) 1
 set fmri(deriv_yn3) 1
 
 # Custom EV file (EV 3)
-set fmri(custom3) "##BASEPATH##/sub-02/onsets/run-1/body.txt"
+set fmri(custom3) "##BASEPATH##/##SUB##/onsets/run-1/body.txt"
 
 # Orthogonalise EV 3 wrt EV 0
 set fmri(ortho3.0) 0
@@ -469,7 +469,7 @@ set fmri(tempfilt_yn4) 1
 set fmri(deriv_yn4) 1
 
 # Custom EV file (EV 4)
-set fmri(custom4) "##BASEPATH##/sub-02/onsets/run-1/object.txt"
+set fmri(custom4) "##BASEPATH##/##SUB##/onsets/run-1/object.txt"
 
 # Gamma sigma (EV 4)
 set fmri(gammasigma4) 3
@@ -530,7 +530,7 @@ set fmri(tempfilt_yn5) 1
 set fmri(deriv_yn5) 1
 
 # Custom EV file (EV 5)
-set fmri(custom5) "##BASEPATH##/sub-02/onsets/run-1/scene.txt"
+set fmri(custom5) "##BASEPATH##/##SUB##/onsets/run-1/scene.txt"
 
 # Orthogonalise EV 5 wrt EV 0
 set fmri(ortho5.0) 0
@@ -585,7 +585,7 @@ set fmri(tempfilt_yn6) 1
 set fmri(deriv_yn6) 1
 
 # Custom EV file (EV 6)
-set fmri(custom6) "##BASEPATH##/sub-02/onsets/run-1/scramble.txt"
+set fmri(custom6) "##BASEPATH##/##SUB##/onsets/run-1/scramble.txt"
 
 # Orthogonalise EV 6 wrt EV 0
 set fmri(ortho6.0) 0
