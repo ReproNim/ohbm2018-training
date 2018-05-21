@@ -26,10 +26,7 @@ cd bids
 datalad install -d. -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
 
 # get a ready-made container with the dicom converter
-# TODO make --call-fmt option not needed for known shub:// case
-# https://github.com/datalad/datalad-container/issues/31
-datalad containers-add heudiconv -u shub://mih/ohbm2018-training:heudiconv \
-    --call-fmt singularity exec {img} {cmd}
+datalad containers-add heudiconv -u shub://mih/ohbm2018-training:heudiconv
 
 # with `datalad (containers-)run` we can capture basic provenance information on any
 # analysis step: what files where produced by which command, based on
@@ -91,7 +88,7 @@ sed -e "s,##BASEPATH##,$(pwd),g" -e "s,##SUB##,sub-02,g" ${srcdir}/scripts/ffa_d
 datalad add --to-git sub-02/*.fsf -m "FSL FEAT analysis config script"
 
 # use a pre-crafter container image for FSL
-datalad containers-add heudiconv -u shub://mih/ohbm2018-training:heudiconv --call-fmt singularity exec {img} {cmd}
+datalad containers-add heudiconv -u shub://mih/ohbm2018-training:fsl
 
 # execute GLM analysis, this will capture the entire FSL output with
 # datalad
