@@ -37,15 +37,31 @@ datalad remove --nocheck demo_func
 # without from scratch re-acquisition
 datalad hirni-create-study study_ds
 cd study_ds
+
+# import DICOM tarball, produces a dedicated subdataset for them, so their
+# identity can be tracked even of content is confidential and storage
+# remains in some closed facility
 datalad hirni-import-dcm ${wdir}/s02_study_dicoms.tar.gz
+
+# in the future there will be more import commands for stimulation logs of
+# known formats, eyetracking data, physio recording from different vendors, ...
 cp ${wdir}/s02_log.tsv 02/
 datalad add 02/ -m "Add stimulation log"
-cd ${wdir}
+
+# key point of this step is that there are snippets of study specification
+# files scattered across the repo (for each import) that are pre-populated
+# from datalad metadata, and can now be edited in order to assign "task"
+# conditions, fix up DICOM metadata entry mistakes, etc...
+# (GUI for that is in the works)
+cd ..
 
 # -- part 1: DICOM conversion ---
+# this BIDS version of the study data is a separate dataset
 datalad create bids
 cd bids
 
+# conversion happens in a dedicated container so we know exactly what
+# was happening. DICOM converters are always broken...
 # get a ready-made container with the dicom converter
 datalad containers-add conversion -u shub://mih/ohbm2018-training:heudiconv
 
@@ -54,9 +70,18 @@ datalad containers-add conversion -u shub://mih/ohbm2018-training:heudiconv
 datalad install -d. -s ../study_ds sourcedata
 mkdir -p inputs; ln -s ../sourcedata inputs/rawdata; datalad add inputs/rawdata
 
-# Run the conversion TODO: description (see amazing_datalad)
+# Run conversion to BIDS
+# this will execute heudiconv inside, but instead of using the reproin heuristic
+# or the classical two-pass logic (try first, see what breaks, edit, try again)
+# it uses a deterministic that comes with datalad-hirni, which takes all needed
+# info from the studyspec snippets in the input RAW dataset
 datalad hirni-spec2bids -s sourcedata/02
-cd ${wdir}
+
+cd ..
+
+# the rest is pretty much identical (for now) to any other script with amazing
+# datalad functionality. Later there will be execution of "prepared command"
+# which could use BIDS-apps and other ready-to-use pipelines
 
 # -- part 2: (GLM) analysis ---
 
