@@ -5,6 +5,7 @@
 #
 
 set -e -u
+set -x
 
 # remember the original directory, just to make some admin parts easier
 # but generally irrelevant
@@ -29,15 +30,31 @@ datalad remove --nocheck demo_func
 # XXX actual demo from here
 
 # -- part 0: RAWRAW data ---
-# assemble all data artifacts as the were produced in a dataset that
+# assemble all data artifacts as they were produced in a dataset that
 # represents the state of data acquisition that cannot be reproduced
 # without from scratch re-acquisition
-
-TODO
+datalad cbbs-create-study study_ds
+cd study_ds
+datalad cbbs-import-dcm ${wdir}/s02_study_dicoms.tar.gz
+cp ${wdir}/s02_log.tsv 02/
+datalad add 02/ -m "Add stimulation log"
+cd ${wdir}
 
 # -- part 1: DICOM conversion ---
+datalad create bids
+cd bids
 
-TODO
+# get a ready-made container with the dicom converter
+datalad containers-add conversion -u shub://mih/ohbm2018-training:heudiconv
+
+# install input data as a subdataset, to enable identity tracking
+# an automated content retrieval, if necessary
+datalad install -d. -s ../study_ds sourcedata
+mkdir -p inputs; ln -s ../sourcedata inputs/rawdata; datalad add inputs/rawdata
+
+# Run the conversion TODO: description (see amazing_datalad)
+datalad cbbs-spec2bids -s sourcedata/02
+cd ${wdir}
 
 # -- part 2: (GLM) analysis ---
 
