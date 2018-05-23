@@ -73,7 +73,7 @@ sed -e "s,##BASEPATH##,$(pwd),g" -e "s,##SUB##,sub-02,g" ${srcdir}/scripts/ffa_d
 datalad add --to-git sub-02/*.fsf -m "FSL FEAT analysis config script"
 
 # use a pre-crafter container image for FSL
-datalad containers-add heudiconv -u shub://mih/ohbm2018-training:fsl
+datalad containers-add fsl -u shub://mih/ohbm2018-training:fsl
 
 # execute GLM analysis, this will capture the entire FSL output with
 # datalad
