@@ -6,17 +6,17 @@
 kind: "lesson"
 
 # Overall title for pages.
-title: "ReproNim lesson template"
+title: "DataLad introduction"
 
 # Repository URL (without trailing slash).
-repo: https://github.com/ReproNim/module-template
+repo: https://github.com/myyoda/module-datalad
 
 # Root URL below username.github.io domain, with leading slash but no trailing slash.
 # For example, for 'https://neurohackweek.github.io/lesson-example', use '/lesson-example'.
-root: "/module-template"
+root: "/module-datalad"
 
 # Contact email address.
-email: debian@onerussian.com
+email: team@datalad.org
 
 #------------------------------------------------------------
 # Generic settings (should not need to change).
@@ -37,7 +37,7 @@ rn_site: "https://repronim.github.io"
 rn_github: "https://github.com/repronim"
 
 # Start time in minutes (540 is 09:00 am)
-start_time: 540
+start_time: 615
 
 # Specify that things in the episodes collection should be output.
 collections:
