@@ -23,7 +23,7 @@ cd bids
 
 # install input data as a subdataset, to enable identity tracking
 # an automated content retrieval, if necessary
-datalad install -d. -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
+datalad install -d . -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
 
 # get a ready-made container with the dicom converter
 datalad containers-add heudiconv -u shub://mih/ohbm2018-training:heudiconv
@@ -63,7 +63,7 @@ datalad create glm_analysis
 cd glm_analysis
 
 # get the BIDS raw dataset (no actual content)
-datalad install -d. -s ../bids inputs/rawdata
+datalad install -d . -s ../bids inputs/rawdata
 
 # convention: put all code in a code/ directory
 mkdir -p code
