@@ -2,7 +2,7 @@
 ## install virtual box
 ## download the ova file
 
-# ohbm2018-training
+# OHBM 2018 Reproducibility Course Schedule
 
 ## Stats components
 * sampling : do we get the same results with sampling 
