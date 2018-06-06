@@ -1,3 +1,7 @@
+# Instructions
+## install virtual box
+## download the ova file
+
 # ohbm2018-training
 
 ## Stats components
