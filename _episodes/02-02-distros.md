@@ -1,9 +1,9 @@
 ---
-title: "A second part"
-teaching: 5
-exercises: 5
+title: "(Neuro)Debian/Git/GitAnnex/DataLad: Distributions and Version Control"
+teaching: 15
+exercises: 15
 questions:
-- "Can we break up the lesson into multiple parts?"
+- "What are the best ways to obtain and track information about software, code, and data used or produced in the study?"
 objectives:
 - "See that you can have more than one part for the lesson"
 keypoints:

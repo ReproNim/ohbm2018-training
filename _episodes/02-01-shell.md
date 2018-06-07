@@ -1,9 +1,10 @@
 ---
-title: "An introduction to this lesson"
+title: "Shell: Getting around the “black box”"
 teaching: 15
-exercises: 0
+exercises: 15
+start_time: 1015
 questions:
-- "What do we need a template for?"
+- "How Shell tracks 'provenance' and how to make use of it?"
 objectives:
 - "Edit lesson materials in the template"
 - "Contribute fixes through Github PRs"

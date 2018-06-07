@@ -6,7 +6,7 @@
 kind: "lesson"
 
 # Overall title for pages.
-title: "DataLad introduction"
+title: "Computational basis and ReproIn/DataLad"
 
 # Repository URL (without trailing slash).
 repo: https://github.com/myyoda/module-datalad
