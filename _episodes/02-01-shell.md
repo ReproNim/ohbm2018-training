@@ -2,7 +2,6 @@
 title: "Shell: Getting around the “black box”"
 teaching: 15
 exercises: 15
-start_time: 1015
 questions:
 - "How Shell tracks 'provenance' and how to make use of it?"
 objectives:
