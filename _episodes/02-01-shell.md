@@ -1,81 +1,53 @@
 ---
 title: "Shell: Getting around the “black box”"
-teaching: 15
-exercises: 15
+teaching: 10
+exercises: 10
 questions:
-- "How Shell tracks 'provenance' and how to make use of it?"
+- "Why and how does using the command line/shell efficiently increase reproducibility of neuroimaging studies?"
+- "How can we assure that our scripts *do the right thing*?"
 objectives:
-- "Edit lesson materials in the template"
-- "Contribute fixes through Github PRs"
-- "Use the template to create your own lesson"
+- "Provide hints on efficient use of the collected shell history of commands"
+- "Explain how to make shell scripts more robust and less dangerous"
 keypoints:
-- We want to use this template to provide lesson materials in an open and useful format.
-
-- This is in line with our overall goal of making science (including scientific training) more open.
-
+- "A command line shell is a powerful tool and learning additional
+ 'tricks' could help to make its use much more efficient, less
+ error-prone, and thus more reproducible"
+- "Shell scripting is the most accessible tool to automate execution of
+  arbitrary set of commands; This avoids manual retyping of the
+  same commands and in turn avoids typos and erroneous analyses"
 ---
 
-### ReproNim is *open*
+## What is a “shell”?
 
-The ReproNim event can only accommodate a limited number of participants.
-Nevertheless, we are committed to openness and we are committed to providing our
-materials in an open format, through a publicly accessible website.
+*Shell* commonly refers to the UNIX shell environment, which in its
+core function provides users with a CLI (command line interface) to
+manipulate "environment variables" and to execute external
+commands. Because desired actions are expressed as typed commands it
+becomes possible to script (program) sets of those commands to be
+(re-)executed repetitively or conditionally (e.g., provides constructs
+for loops, functions, conditions).  So, in contrast to GUI (graphical
+user interface), such automation via scripting is a native feature of
+a CLI shell.  Unlike GUI integrated environments with lots of
+functionality exposed in menu items and icons, shell is truly a "black
+box", which has a lot of powerful features which you need to discover
+first to be able to use it efficiently.  Because manipulation of files
+is one of the main tasks to accomplish in a shell, usually a shell
+either comes with common commands (such as `cp`, `mv`, etc.) built-in
+or is accompanied by an additional package (e.g., `coreutils` in
+Debian) providing those helpful command line utilities.
 
-### Using a template allows to create websites for each of the lectures
-
-To enable access to the materials in an open format, but allow different
-instructors freedom in constructing their own materials, we provide a template
-(you're looking at it!), that can be relatively easily adapted to create lesson
-materials for many different lessons
-
-To create a new lesson out of the template
-
-### Template lesson files are markdown files
-
-* They are in the `_episodes` folder.
-* They are named sequentially:
-  - `01-first-part.md`
-  - `02-second-part.md`
-  - etc
-
-
-### Markdown format allows you to create nice web-pages
-
-And with only a really small amount of effort! It's text based, so you can
-write exactly what you intend to say.
-
-If you want to introduce a block of code into your lesson, write a block
-fenced by triple-tilde. Here is an example of that
-
-~~~
-import nibabel as nib
-img = nib.load('my_file.nii.gz')
-affine = img.affine
-~~~
-{: .python}
-
-
-Images can be embedded into the lesson plan, by using the following syntax:
-
-![an image]({{site.root}}/fig/rn-logo.png)
-
-To embed images, you will also want to copy the image file into the
-`fig` folder of the repository, and add that.
-
-> ## Exercises and challenges (click on the arrow to the right to open)
+> ### More thorough coverage
 >
->  Boxes with "challenges" can be interleaved with the lesson materials.
->  Consider adding a challenge every 15 minutes or so.
->    - This helps participants stay engaged.
->    - It surfaces questions that learners have as they go along.
->    - It breaks up the instruction, providing a bit of a diversion.
->    - It gives people a chance to engage in peer instruction, which is
->      is [known to help learning](https://en.wikipedia.org/wiki/Peer_instruction).
-{: .challenge}
-
-
-> ## Callouts
-> If you want to introduce a box with a "callout", use this syntax
-> This is useful for materials that you think of as explanatory asides
-> I usually use this for extra material that is "optional".
+>  In this training event we assume that you know basics of Shell
+>  and will not go through detailed presentation of various aspects
+>  which are relevant for making your work with Shell, and research
+>  activities in general more reproducible.  We refer you to our full
+>  version of the training materials on Shell, which covers additional
+>  topics such as differences between shells, importance of environment
+>  variables, unit-testing etc.  We encourage you to go through following
+>  materials at any other convenient moment later on your own:
+>
+>   - [ReproIn Reproducible Basics Module: Command line shell (full: 3 h)](http://www.reproducibleimaging.org/module-reproducible-basics/01-shell-basics/)
 {: .callout}
+
+
