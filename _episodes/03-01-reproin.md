@@ -1,5 +1,5 @@
 ---
-title: "ReproIn: BIDS datasets straight from the MR scanner"
+title: "ReproIn/DataLad: A complete portable and reproducible fMRI study from scratch"
 teaching: 5
 exercises: 25
 questions:
