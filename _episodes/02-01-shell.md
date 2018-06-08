@@ -61,14 +61,14 @@ purpose and command line options, which is available quickly in a shell:
 Typically such `--help` just causes them to print concise description
 of the entire program and list of (common) command line options it supports.
 
-> Run some sample command(s) you know (e.g. `bash`, `cat`), with `--help`.
->
-> > e.g. `bash --help`
+> ## Task (warm up)
+> Run some sample command(s) you know (e.g. `bash`, `cat`), with `--help`,
+> e.g. `bash --help` .
 {: .challenge}
 
-### `man`
+### Manual pages (AKA "manpages")
 
-`man` command provides access to "manual pages" (manpages for short)
+`man` command provides access to manpages
 available for many (if not majority) of available to you commands.
 Manpages often provide a very detailed description, and consist of many
 pages of textual documentation.  It gets presented to you in a `pager`
@@ -83,39 +83,39 @@ common are `more` and `less`.  Common shortcuts are
 - `/` - search
 - `q` - exit
 
-> Navigate `man` for sample commands
+
+> ## Task: Navigate `man` for `git`
 >
-> What is the short description of `git` command?
+> Question: What is the short description of `git` command?
 >
 {: .challenge}
 
 `man -k` searches through all available manpages short descriptions and
 command names
 
-> Find commands for work with "containers"
+> ## Task: Find commands for work with "containers"
 >
-> > `man -k containers`
->
+> > ## Solution
+> > ~~~
+> > % man -k containers
+> > ~~~
+> > {: .bash}
+> {: .solution}
 {: .challenge}
 
+## Beware of Vim
 
-### manpages
+[![Vim and web designer](../fig/borrowed/vim-programming-joke.png)](https://github.com/repronim/reproin#overall-workflow)
 
-`man` command provides help stored in "manpages" for many commands.
+[Vi](http://ex-vi.sourceforge.net) (a classical one) and [Vim](https://www.vim.org) are
+very powerful and popular editor(s) which are a typical default for an
+editor on a Unix or Linux system.  But they require learning to start using them efficiently.
+There is a number of tutorials (e.g. [this randomly googled up
+one](https://scotch.io/tutorials/getting-started-with-vim-an-interactive-guide))
+online.  Here we will just teach you a bulletproof way to exit vim happen you end up in this unknown territory:
 
-> ## Navigate man page(s) for sample commands
->
-> To see which command will actually be run when you intend to run a
-> `COMMAND`, use `which` command, e.g.
-> ~~~
-> $ which python
->  # TODO
-> ~~~
-> {: .bash}
-> Do not mix up with `locate` command, which (if available) would
-> just find a file with that word somewhere in the file name/path.
-{: .challenge}
-
+- `ESC` `Shift-z` `Shift-q` to quick without saving
+- `ESC` `Shift-z` `Shift-z` to quick saving changes.
 
 ## Some important environment variables and commands
 
@@ -129,20 +129,25 @@ impact what external commands and libraries you are using.
 
 #### PATH - determines full path to the command to be executed
 
-> ## How can you determine which command (full path to it) that you are about to use?
+> ## Task: determine which program (full path to it) executes when you run `git`
 >
 > To see which command will actually be run when you intend to run a
 > `COMMAND`, use `which` command, e.g.
 > ~~~
-> $ which python
->  # TODO
+> % which git
+> /usr/bin/git
 > ~~~
 > {: .bash}
-> Do not mix up with `locate` command, which (if available) would
+>
+> What about `python` command?   Try with `which -a` as well.
+>
+> Do not mix up `which` with `locate` command, which (if available) would
 > just find a file with that word somewhere in the file name/path.
+>
 {: .solution}
 
-> ## How can you add a new path for shell to look for commands in?
+
+> ## Question: How can you add a new path for shell to look for commands in?
 >
 > 1. So that those commands take precedence over other commands named
 > the same way but available elsewhere on the `PATH`?
@@ -160,10 +165,63 @@ impact what external commands and libraries you are using.
 
 ## Shell History
 
+By default, a shell stores in memory a history of the commands you
+have run.  You could access it using `history` command.  When you exit
+the shell, those history lines are appended to a file (by default in
+`~/.bash_history` for bash shell). This not
+only allows you to quickly recall commands you have run recently, but
+can provide you an actual "lab notebook" of the actions you have
+performed. Thus the shell history could be indispensable to
+
+- provide a skeleton for your script and soon you realize that automating
+  current operations is worthwhile the effort, and
+- determine exactly what command you have run to perform some given
+  operation.
+
+> ## Eternal history
+>
+> Unfortunately by default shell history is truncated to 1000 last
+> commands, so you cannot use as your "eternal lab notebook" without
+> some tuning.  Since it is a common problem, solutions
+> exist, so please review available approaches:
+> - [shell-chronicle](https://github.com/con/shell-chronicle)
+> - [tune up of PROMPT_COMMAND](https://debian-administration.org/article/543/Bash_eternal_history)
+>   to record each command as soon as it finished running
+> - adjustment of `HISTSIZE` and `HISTCONTROL` settings,
+>   e.g. [1](http://www.pointsoftware.ch/howto-bash-audit-command-logger/)
+>   or [2](http://superuser.com/questions/479726/how-to-get-infinite-command-history-in-bash)
+{: .callout}
+
+Some of the main keyboard shortcuts to navigate shell history are:
+
+`Ctrl-p` | Previous line in the history
+`Ctrl-n` | Next line in the history
+**`Ctrl-r`** | **Bring up next match backwards in shell history** (very very useful one)
+
+You can hit `Ctrl-r` and start typing some portion of the command you
+remember running. Subsequent `Ctrl-r` will bring up the next match and so
+on. You will leave "search" mode as soon as you use some other
+command line navigation command (e.g. `Ctrl-e`).
+
+`Alt-.` | Insert last positioned argument of the previous command.
+
+Subsequent `Alt-.` will bring up the last argument of the previous command
+and so on.
+
+> ## History navigation exercise
+>
+> Inspect your shell command history you have run so far:
+> 1. use `history` and `uniq` commands to find what is the most
+>    popular command you have run
+> 2. experiment using `Ctrl-r` to find commands next to the most
+>    popular command
+{: .challenge}
+
 
 ## Scripting
 
-> ## What is a shebang?
+> ## Question: What is a shebang?
+>
 > It is the first line in the script, and which starts with `#!`
 > followed by the command to be used to interpret the script, e.g.
 > if a file `blah` begins with the following:
@@ -251,6 +309,23 @@ value or just define it conditionally on being not yet defined with:
 
 
 > ## set -eu
+>
 > Just set both "fail early" modes for extra protection to make your
 > scripts more deterministic and thus reproducible.
 {: .callout}
+
+
+### Do not hardcode full paths in your scripts
+
+Do not copy/paste full paths all around your script(s).  Define a variable
+for each "root directory" for a number of relevant path, like a
+`studypath=/home/me/thestudy`, `datapath=/data/commonmess`. Then use relative paths in specifications, if
+needed appending them to the "root directory" paths, e.g.
+`"$datapath/participants.tsv"`.  This allows to use wrong inputs (e.g.
+mixing data from two different studies) and also to generalize your scripts
+to work on any other dataset conforming some (well - BIDS?) layout.
+Relative paths are also preferable when
+need to define a relationship between two components (e.g. datasets as
+you will see in the future sections).
+
+
