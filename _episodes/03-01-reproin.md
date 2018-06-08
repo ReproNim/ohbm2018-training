@@ -107,7 +107,7 @@ add as a *subdataset* to our BIDS dataset.
 > > ## Solution
 > > ~~~
 > > % datalad install -d . -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
-> > % datalad sudatasets
+> > % datalad subdatasets
 > > ~~~
 > > {: .bash}
 > {: .solution}
@@ -133,8 +133,9 @@ an image of a computational environment to a DataLad dataset (just like any othe
 file. This way we know exactly what we are using, and where to get it again
 in the future.
 
-A ready-made [singularity] container with the [HeuDiConv] DICOM converter is
-available from [singularity-hub] at: shub://mih/ohbm2018-training:heudiconv
+A ready-made [singularity] container with the [HeuDiConv] DICOM converter
+(~160 MB) is available from [singularity-hub] at:
+shub://mih/ohbm2018-training:heudiconv
 
 > ## Task: Add the HeuDiConv container to the dataset
 >
@@ -270,26 +271,228 @@ analyses of any kind. Let's leave the dataset directory now:
 
 ## A reproducible GLM demo analysis
 
+With our raw data prepared in BIDS format, we can now conduct an analysis.
+We will implement a very basic first-level GLM analysis using FSL that runs
+in just a few minutes. We will follow the same principles that we already
+applied when we prepared the BIDS dataset: complete capture of all inputs,
+computational environments and code, as well as outputs.
 
-## Wrapping up
+Importantly, we will conduct our analysis in a new dataset. The raw BIDS
+dataset is suitable for many different analysis than can all use that dataset
+as input. In order to avoid wasteful duplication and improve the modularity
+of our data structures, we will merely use the BIDS dataset as an input,
+but we will *not* modify it in any way.
 
-> ## Exercise: Script the entire analysis from ground up
+> ## Task: Create a new DataLad dataset called `glm_analysis`
 >
-> Using your shell history, prepare a shell script which will implement
-> all the actions you have done, and make it take two parameters:
-> - the URL for the DataLad dataset to be used (instead of the
->   <https://github.com/datalad/example-dicom-functional.git>)
-> - work directory (instead of current one)
+> Use the [datalad create] command, and subsequently change into the
+> root directory of the newly created dataset.
 >
-> Script must exit right away if any command fails or any of the
-> parameters or variables remain undefined
->
-> > ## Answer
-> > Something like <https://github.com/myyoda/ohbm2018-training/blob/master/fsl_glm_w_amazing_datalad.sh>
-> > or use [datalad rerun]: `datalad rerun --since= --script myanalysis.sh`
+> > ## Solution
+> > ~~~
+> > % datalad create glm_analysis
+> > % cd glm_analysis
+> > ~~~
+> > {: .bash}
 > {: .solution}
 >
 {: .challenge}
+
+Following the same logic and commands as previously, we add the raw BIDS
+dataset as a subdataset of the new analysis dataset to enable comprehensive
+tracking of all input data within the analysis dataset.
+
+> ## Task: Add BIDS data as a subdataset in `inputs/rawdata`
+>
+> Use the [datalad install] command. Make sure to identify the analysis dataset
+> as the dataset to operate on to get the BIDS dataset registered as a subdataset
+> (and not just as a standalone dataset). Use the [datalad subdatasets]
+> command to verify the result.
+>
+> > ## Solution
+> > ~~~
+> > % datalad install -d . -s ../bids inputs/rawdata
+> > % datalad subdatasets
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+{: .challenge}
+
+Regarding the layout of this analysis dataset we cannot relying on automatic
+tools and a comprehensive standard yet (but such guidelines are actively being
+worked on). However, Datalad nevertheless aids efforts to bring order to the
+chaos. Anyone can develop their own ideas on how a dataset should be
+structured, and implement these concepts in *dataset procedures* that can be
+executed using the [datalad run-procedure] command.
+
+Here we are going to adopt the YODA principles, a set of simple rules on how to
+structure analysis dataset. You can learn more about YODA at OHBM poster 2046
+(*YODA: YODA’s organigram on data analysis*), but here the only relevant aspect
+is that we want to keep all analysis scripts in the subdirectory `code/` of
+this dataset. We can get a readily configured dataset by running the YODA
+setup procedure:
+
+> ## Task: Run the `setup_yoda_dataset` procedure
+>
+> Use the [datalad run-procedure] command. Check what has changed in the dataset.
+>
+> > ## Solution
+> > ~~~
+> > % datalad run-procedure setup_yoda_dataset
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+{: .challenge}
+
+Now we are almost ready to fire-up FSL for our GLM analysis. However, we need two
+pieces of custom code:
+
+1. a small script that can convert BIDS events.tsv files into the EV3 format that
+   FSL can understand: available at https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
+
+2. an FSL analysis configuration template script available at: https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
+
+Any custom code needs to be tracked, if we want to achieve a complete record of
+how an analysis was conducted. Hence we have to store those scripts in our analysis
+dataset.
+
+> ## Download the scripts and include them in the analysis dataset
+>
+> Use the [datalad download-url] command. Place the scripts in the `code/` directory
+> under their respective names. Check `git log` to confirm that the commit message
+> shows the URL where each script has been downloaded from.
+>
+> > ## Solution
+> > ~~~
+> > % datalad download-url -O code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
+> > % datalad download-url -O code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
+> > % git log
+> > 
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+{: .challenge}
+
+At this point our analysis dataset contains all required inputs. We only have to
+run our custom code to produce the inputs in the format that FSL expects.
+First, let's convert the events.tsv file into EV3 format files.
+
+> ## Task: Run the converter script for the event timing information
+>
+> Use the [datalad run] command to execute the script at `code/events2ev3.sh`.
+> it requires the name of the output directory (use `sub-02`) and the location
+> of the BIDS events.tsv file to convert. Use the `--input` and `--output`
+> options to let DataLad automatically manage these files for you.
+> **Important**: This BIDS subdataset does not actually have the content for the
+> events.tsv file yet. If you use `--input` correctly, DataLad will obtain the
+> file content for you automatically. Check the output carefully, the script is
+> written in a sloppy way that will produce some output even things go wrong.
+> Each generated file must have three numbers per line.
+>
+> > ## Solution
+> > ~~~
+> > % datalad run -m 'Build FSL EV3 design files' \
+> >       --input inputs/rawdata/sub-02/func/sub-02_task-oneback_run-01_events.tsv \
+> >       --output 'sub-02/onsets' \
+> >       bash code/events2ev3.sh sub-02 {inputs}
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+{: .challenge}
+
+And finally we only have left to configure the desired first-level GLM analysis
+with FSL. The following command will create a working configuration from the
+template we have stored in `code/`. It uses the mighty `sed` editor. That one is
+mind-boggling, but once you know how to use it, you never want to forget about
+it again. Let's also run that through [datalad run], so we know forever that we didn't
+type this in by hand, but actually generated it from a template (that we could
+alter and then regenerate this file).
+
+> ~~~
+> datalad run \
+>     -m "FSL FEAT analysis config script" \
+>     --output sub-02/1stlvl_design.fsf \
+>     bash -c 'sed -e "s,##BASEPATH##,{pwd},g" -e "s,##SUB##,sub-02,g" \
+>         code/ffa_design.fsf > {outputs}'
+> ~~~
+> {: .bash}
+
+Ready for FSL!
+
+But hold on. We cannot simply run FSL. If we were concerned that a simple DICOM
+converter can be buggy, we absolutely have to handle a software as complex as
+FSL with the same care. So let's add a container to this analysis dataset too.
+A ready-made container with FSL (~260 MB) is available from
+shub://mih/ohbm2018-training:fsl
+
+> ## Task: Add a container with FSL
+>
+> Use the [datalad containers-add] command to add this container under the name
+> `fsl`, and the [datalad containers-list] command to verify that
+> everything worked.
+>
+> > ## Solution
+> > ~~~
+> > % datalad containers-add fsl -u shub://mih/ohbm2018-training:fsl
+> > % datalad containers-list
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+{: .challenge}
+
+And finally, no but, no waiting: We can run FSL. The command is as short as
+`feat sub-02/1stlvl_design.fsf`. However, in order to achieve the most reproducible
+and most portable execution we should tell the [datalad containers-run] command
+what the inputs and outputs are. DataLad will then be able to obtain the required
+NIfTI time series file form the BIDS raw subdataset.
+
+Please run the following command as soon as possible, it takes around 5min to
+complete on an average system.
+
+> ~~~
+> datalad containers-run -m "sub-02 1st-level GLM" \
+    --input sub-02/1stlvl_design.fsf \
+    --input sub-02/onsets \
+    --input inputs/rawdata/sub-02/func/sub-02_task-oneback_run-01_bold.nii.gz \
+    --output sub-02/1stlvl_glm.feat \
+    feat {inputs[0]}
+> ~~~
+
+Once this command finished, DataLad will have captures the entire FSL output,
+and the dataset will contain a complete record all the way from the input BIDS
+dataset to the GLM results (which, by the way, performed an FFA localization on
+a real BOLD imaging dataset, take a look!). The BIDS subdataset in turn has a
+complete record of all processing down from the raw DICOMs onwards.
+
+TODO: rerun
+
+
+## Get ready for the afterlife
+
+And because this record is complete, we can now simply throw away the input BIDS
+**subdataset** of our analysis.
+
+> ## Task: Verify that the BIDS subdataset is unmodified and uninstall it
+>
+> Use the [datalad diff] command to check for modifications of the subdataset,
+> and the [datalad uninstall] do delete it.
+>
+> > ## Solution
+> > ~~~
+> > % datalad diff --revision HEAD~10 -- inputs
+> > % datalad uninstall -d . inputs -r
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+{: .challenge}
+
+TODO metadata
 
 [datalad add-sibling]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-add-sibling.html
 [datalad add]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-add.html
@@ -300,7 +503,7 @@ analyses of any kind. Let's leave the dataset directory now:
 [datalad create-sibling-github]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-create-sibling-github.html
 [datalad create-sibling]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-create-sibling.html
 [datalad create]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-create.html
-[datalad datalad]: http://docs.datalad.org/en/latest/generated/man/datalad.html
+[datalad download-url]: http://docs.datalad.org/en/latest/generated/man/datalad-download-url.html
 [datalad drop]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-drop.html
 [datalad export]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-export.html
 [datalad export_tarball]: http://docs.datalad.org/en/latest/generated/datalad.plugin.export_tarball.html
@@ -312,6 +515,7 @@ analyses of any kind. Let's leave the dataset directory now:
 [datalad publish]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-publish.html
 [datalad remove]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-remove.html
 [datalad run]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-run.html
+[datalad run-procedure]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-run-procedure.html
 [datalad rerun]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-rerun.html
 [datalad save]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-save.html
 [datalad search]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-search.html
