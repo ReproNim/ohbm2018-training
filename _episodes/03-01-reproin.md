@@ -53,6 +53,8 @@ The data we are working with already follows the [ReproIn] naming conventions,
 and the [HeuDiConv] converter can use this information to automatically create
 a BIDS-compliant dataset for us.
 
+[![ReproIn Convention](../fig/dbic-conversions.png)](https://github.com/repronim/reproin#overall-workflow)
+
 Our first goal is to convert our DICOM data into a DataLad
 dataset in BIDS format.
 
