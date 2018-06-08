@@ -50,7 +50,7 @@ are many advantages of doing so, but the most important for us is that we have
 much less work to do when using BIDS, in comparision to inventing something new.
 
 The data we are working with already follows the [ReproIn] naming conventions,
-and the [HeuDiConv] converter can use this information to autmatically create
+and the [HeuDiConv] converter can use this information to automatically create
 a BIDS-compliant dataset for us.
 
 Our first goal is to convert our DICOM data into a DataLad
@@ -350,9 +350,9 @@ Now we are almost ready to fire-up FSL for our GLM analysis. However, we need tw
 pieces of custom code:
 
 1. a small script that can convert BIDS events.tsv files into the EV3 format that
-   FSL can understand: available at https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
+   FSL can understand: available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh>
 
-2. an FSL analysis configuration template script available at: https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
+2. an FSL analysis configuration template script available at: <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf>
 
 Any custom code needs to be tracked, if we want to achieve a complete record of
 how an analysis was conducted. Hence we have to store those scripts in our analysis
