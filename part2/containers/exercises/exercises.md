@@ -6,13 +6,9 @@ class: center, middle, inverse
 
 ---
 layout: false
-##<span style="color:purple">Outline</span>
 
-- ### Learning objectives
-- ### Requirements
-- ### Introduction
-- ### Tools
-- ### Exercises
+- ### Exercise 1: Creating a Docker image with FSL
+- ### Exercise 2: Running *bet* within the container
 
 ---
 
@@ -20,12 +16,13 @@ name: inverse
 layout: true
 class: center, middle, inverse
 ---
-## Learning objectives
+## Exercise 1: Creating a Docker image with FSL
 ---
 layout: false
 
 - ### Why do we use containers?
 
+<img src="img/docker1.jpeg" width="35%" />
 &nbsp;
 
 - ### What are the various types of container based environments?
