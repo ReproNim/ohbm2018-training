@@ -163,7 +163,7 @@ Datalad comes with two command to run arbitrary shell command and capture there
 output in a dataset. These command are [datalad run] and [datalad
 containers-run] \(provided by the [datalad-container] extension). Both commands
 are very similar, in fact there interface is almost identical. The big
-difference is that [datalad-run] executes commands in the local environment,
+difference is that [datalad run] executes commands in the local environment,
 [datalad containers-run] executes commands in a containerized computational
 environment. Therefore we are going to use the latter.
 
@@ -174,7 +174,7 @@ environment. Therefore we are going to use the latter.
 >     heudiconv -f reproin -s 02 -c dcm2niix -b -l "" --minmeta -a . \
 >         -o /tmp/heudiconv.sub-02 --files inputs/rawdata/dicoms
 >
-> It essentially tells it to use the [ReproNim] heuristic to convert the
+> It essentially tells it to use the [ReproIn heuristic] to convert the
 > DICOMs using the subject identifier `02`, with the DICOM converter
 > `dcm2niix` into the BIDS format. As the last and most important argument
 > the directory with the DICOMs is given.
@@ -198,7 +198,7 @@ environment. Therefore we are going to use the latter.
 > > ~~~
 > > {: .bash}
 > > It is not necessary to specify the name of the container to be used.
-> > If there is only one container known to a dataset [datalad container-run]
+> > If there is only one container known to a dataset [datalad containers-run]
 > > is clever enough to use that one.
 > {: .solution}
 >
@@ -247,7 +247,7 @@ directly.
 > > ~~~
 > > {: .bash}
 > > It is not necessary to specify the name of the container to be used.
-> > If there is only one container known to a dataset [datalad container-run]
+> > If there is only one container known to a dataset [datalad containers-run]
 > > is clever enough to use that one.
 > {: .solution}
 >
@@ -504,6 +504,7 @@ TODO metadata
 [datalad create-sibling]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-create-sibling.html
 [datalad create]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-create.html
 [datalad download-url]: http://docs.datalad.org/en/latest/generated/man/datalad-download-url.html
+[datalad diff]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-diff.html
 [datalad drop]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-drop.html
 [datalad export]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-export.html
 [datalad export_tarball]: http://docs.datalad.org/en/latest/generated/datalad.plugin.export_tarball.html
@@ -528,6 +529,7 @@ TODO metadata
 [datalad containers-run]: http://docs.datalad.org/projects/container/en/latest/generated/man/datalad-containers-run.html
 
 [ReproIn]: http://reproin.repronim.org
+[ReproIn heuristic]: https://github.com/nipy/heudiconv/blob/master/heudiconv/heuristics/reproin.py
 [DataLad]: http://datalad.org
 [datalad-neuroimaging]: https://github.com/datalad/datalad-neuroimaging
 [datalad-container]: https://github.com/datalad/datalad-container
