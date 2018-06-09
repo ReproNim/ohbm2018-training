@@ -1,0 +1,259 @@
+---
+title: "Challenges with large numbers of tests"
+author: "Celia Greenwood"
+date: "April 23, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Often, when one fits a series of models, a question of interest is whether any of the tests showed something interesting.  This can be translated as "are any of the p-values significant", or by the behaviour of the minimum p-value, or by the behaviour of the ensemble of p-values.  
+
+This code will allow you to generate test statistics under various assumptions, and look at their distributions in various ways. 
+
+
+```{r}
+#setwd("C:/Users/celia.greenwood/My Documents/GitHub/MultTesting/")
+setwd("C:/CeliaFiles/Teaching/OHBM2018/ModuleMultTesting/")
+library(mvtnorm)
+library(ggplot2)
+
+P <- 100           # number of tests to be performed
+Pblock <- 10       # number of tests within a correlated group,
+                   #    number of blocks will be P/Pblock
+cor.block <- 0     # correlation between tests inside a block
+prop.H0 <- 1.0     # proportion of tests following null hypothesis
+z.mean.H0 <- 0     # deviation from the null (simulating the idea of QQplot inflation) for test that should follow the null
+                   #     set to zero by default
+z.sd.H0 <- 1       # standard deviation for null tests
+z.mean.HA <- 0.5   # mean for tests following HA
+z.sd.HA <- 1.0     # standard deviation for tests following HA
+
+```
+
+```{r, echo = FALSE}
+
+qqplot1 <- function(pvals, pthresh=0.001) {
+  pvals2 <- sort(-log10(pvals[!is.na(pvals)]))
+  which.large <- which(pvals2>-log10(pthresh))
+  xaxis <- sort(-log10((1:length(pvals2))/length(pvals2)))
+  plot(xaxis, pvals2, pch=16, col='red', cex=0.4, xlab='Expected -log10 p',
+       ylab='Observed -log10 p')
+  if (length(which.large)>0) {
+    points(xaxis[which.large], pvals2[which.large], col='red', pch=16, cex=1)
+  }
+  abline(0,1, lwd=2)
+}
+```
+## Generating data
+
+```{r}
+
+gendata <- function(P, Pblock, cor.block, prop.H0,
+                    z.mean.H0, z.sd.H0,
+                    z.mean.HA, z.sd.HA) {
+  
+Nblocks <- floor(P / Pblock)
+z.sigma <- diag(Pblock)*(1-cor.block) + cor.block
+
+z.mean <- rep(NA, Pblock)
+vector.z <- rep(NA, P)
+vector.HA <- rep(NA, P)
+
+j.start <- 1
+for (j in 1:Nblocks) {
+  if (prop.H0<1) {
+     num.H0 <- rbinom(1, Pblock, prop.H0)
+  } else {num.H0 <- Pblock }
+  
+  j.end <- j.start + Pblock -1
+  if (num.H0 ==Pblock) {z.mean <- rep(z.mean.H0, Pblock) 
+       vector.HA[j.start:j.end] <- rep(0, Pblock)
+  }
+  else {
+    z.mean <- c(rep(z.mean.H0, num.H0), 
+                rep(z.mean.HA, Pblock-num.H0)) 
+    vector.HA[j.start:j.end] <- c(rep(0,num.H0), rep(1, (Pblock-num.H0)))
+    }
+  vector.z[j.start:j.end] <- rmvnorm(1, z.mean, z.sigma)
+  j.start <- j.start + Pblock
+}
+if (P > Nblocks*Pblock) {
+  num.left <- P - Nblocks*Pblock
+  vector.z[(num.left+1):P] <- rmvnorm(num.left,
+              rep(z.mean.H0,num.left),
+              diag(num.left))
+  vector.HA[(num.left+1):P] <- 0
+}
+return(data.frame(vector.z = vector.z, vector.HA =vector.HA))
+}
+```
+
+##  Displaying results
+
+### 1. QQ plots with increasing correlations.
+
+```{r}
+
+P <- 5000
+Pblock <- 100
+cor.block <- 0.0
+dat1 <- gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+# note these are one-tailed tests
+qqplot1(1-pnorm(dat1$vector.z), pthresh=0.05)
+title("P=5000, H0, no correlation ")
+
+P <- 5000
+Pblock <- 100
+cor.block <- 0.50
+dat2<-gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+qqplot1(1-pnorm(dat2$vector.z), pthresh=0.05)
+title("P=5000, H0, Correlation=0.5, Pblock=100")
+
+P <- 5000
+Pblock <- 100
+cor.block <- 0.90
+dat2<-gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+qqplot1(1-pnorm(dat2$vector.z), pthresh=0.05)
+title("P=5000, H0, Correlation=0.9, Pblock=100")
+
+P <- 5000
+Pblock <- 100
+cor.block <- 0.95
+dat2<-gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+qqplot1(1-pnorm(dat2$vector.z), pthresh=0.05)
+title("P=5000, H0, Correlation=0.95, Pblock=100")
+
+P <- 5000
+Pblock <- 100
+cor.block <- 0.99
+dat2<-gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+qqplot1(1-pnorm(dat2$vector.z), pthresh=0.05)
+title("P=5000, H0, Correlation=0.95, Pblock=100")
+
+
+```
+
+### 2. Watch what happens to the minimum p-value as you make P larger. 
+
+```{r, echo=TRUE, eval=FALSE}
+
+P <- 50000
+Pblock <- 100
+cor.block <- 0.05
+dat1<-gendata(500, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+dat2<-gendata(5000, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+dat3<-gendata(50000, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+
+ggplot() +
+    geom_histogram(data=dat3,aes(vector.z),fill="darkred",alpha=0.2,binwidth=0.3)+
+    geom_histogram(data=dat2,aes(vector.z),fill='darkred',alpha=0.4,binwidth=0.3)+
+    geom_histogram(data=dat1,aes(vector.z),fill='darkred',alpha=0.9,binwidth=0.3)
+    labs(x="Test statistics")+
+    theme(text = element_text(size=10))
+
+```
+
+### 3. When distributional assumptions are not satisfied, the test statistics may not have the right distribution and there may be a systematic bias in the p-values.
+
+```{r}
+
+P <- 5000
+Pblock <- 100
+cor.block <- 0
+z.mean.H0 <- 0.15
+z.sd.H0 <- 1
+dat1<-gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+qqplot1(1-pnorm(dat1$vector.z))
+title("P=5000, no correlation, z.mean.H0=0.15")
+
+```
+
+### 4. Now introduce some tests that follow HA
+
+```{r, echo=TRUE, eval=TRUE, plot=TRUE}
+
+P <- 5000
+Pblock <- 100
+cor.block <- 0.10
+z.mean.H0 <- 0
+z.sd.H0 <- 1
+z.mean.HA <- 2.0
+z.sd.HA <- 1
+prop.H0 <- 0.95
+dat1<-gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+
+ggplot(dat1,aes(vector.z)) +
+    geom_histogram(data=subset(dat1,vector.HA==0),fill = "darkred", alpha = 0.3,
+                   binwidth = 0.3) +
+    geom_histogram(data=subset(dat1,vector.HA==1),fill = "darkblue", alpha = 0.7,
+                   binwidth=0.3) +
+    labs(x="Test statistics") + ggtitle("P=5000, prop.H0=0.95,z.mean.HA=2") +
+    theme(text = element_text(size=10))
+
+qqplot1(1-pnorm(dat1$vector.z))
+mtext(side = 3, line = 1.5, "P=5000, Prop.H0=0.95, z.mean.H0=0, z.mean.HA=2")
+
+
+prop.H0 <- 0.70
+z.mean.HA <-0.20
+dat1<-gendata(P, Pblock, cor.block, prop.H0, z.mean.H0, z.sd.H0,
+                z.mean.HA, z.sd.HA)
+
+ggplot(dat1,aes(vector.z)) +
+    geom_histogram(data=subset(dat1,vector.HA==0),fill = "darkred", alpha = 0.3,
+                   binwidth = 0.3) +
+    geom_histogram(data=subset(dat1,vector.HA==1),fill = "darkblue", alpha = 0.7,
+                   binwidth=0.3) +
+    labs(x="Test statistics") + ggtitle("P=5000, prop.H0=0.7, z.mean.HA=0.20") +
+    theme(text = element_text(size=10))
+
+qqplot1(1-pnorm(dat1$vector.z))
+mtext(side = 3, line = 1.5, "P=5000, prop.H0=0.7, z.mean.HA=0.2")
+
+
+```
+
+### 5.  Two groups of correlated variables.
+
+Often models are fit that assume observed measures are generated by an unobserved latent variable.  For example, voxel image results from the same region of the brain may be highly correlated and a latent underlying structure could be assumed.
+
+Estimating associations between 2 sets of variables that are correlated within themselves creates a particularly challenging multiple testing situation.
+
+```{r,echo=TRUE}
+N<- 20
+latent1 <- rnorm(N)
+latent2 <- rnorm(N)
+
+P<- 10
+sd1 <- 1
+Y1 <- lapply(latent1,function(x) rnorm(P, x, sd1))
+Y1 <- matrix(unlist(Y1), ncol=P, byrow=TRUE)
+#plot(latent1,apply(Y1,1,mean))
+
+sd2 <- 1
+Y2 <- lapply(latent2,function(x) rnorm(P, x, sd2))
+Y2 <- matrix(unlist(Y2), ncol=P, byrow=TRUE)
+#plot(latent1,apply(Y1,1,mean))
+
+pvalmat <- matrix(NA,P,P)
+for (ii in 1:P){ for (jj in 1:P) {
+  pvalmat[ii,jj] <- cor.test(Y1[,ii],Y2[,jj])$p.value}}
+
+qqplot1(unlist(-log10(pvalmat)))
+abline(h=-log10(cor.test(latent1, latent2)$p.value), lwd=2, col='blue')
+```
