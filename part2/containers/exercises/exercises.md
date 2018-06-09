@@ -184,7 +184,7 @@ datalad install -r ///workshops/nih-2017/ds000114
 datalad get ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz
 ```
 
-- mounting a local directory with data and running bet on the downloaded file: 
+- mounting a local directory with data and running *bet* on the downloaded file: 
 ```bash
 docker run -v ~/ds000114:/data image bet /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz sub-01_output
 ```
@@ -206,7 +206,7 @@ layout: false
 mkdir output
 ```
 
-- mounting local directories with data and output, and running bet on the downloaded file:
+- mounting local directories with data and output, and running *bet* on the downloaded file:
 ```bash
 docker run -v ~/ds000114:/data -v ~/output:/output image bet /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz /output/sub-01_output
 ```
