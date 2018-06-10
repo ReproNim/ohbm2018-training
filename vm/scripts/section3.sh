@@ -30,11 +30,12 @@ sudo singularity build PyNIDM.simg Singularity.PyNIDM
 # section 2/3
 sudo docker run --rm kaczmarj/neurodocker:master generate singularity  \
   --base neurodebian:stretch-non-free   --pkg-manager apt   \
-  --install fsl-5.0-core fsl-mni152-templates \
+  --install fsl-5.0-core fsl-mni152-templates file \
   --install make gcc sqlite3 libsqlite3-dev python3-dev \
     libc6-dev python3-pip python3-setuptools python3-wheel \
   --run "pip3 install --system reprozip reprounzip" \
-  --add-to-entrypoint "source /etc/fsl/5.0/fsl.sh" > Singularity.fsl
+  --add-to-entrypoint "source /etc/fsl/5.0/fsl.sh" \
+  --run-bash "ln -fs /etc/fsl/5.0/fsl.sh /.singularity.d/env/99-fsl.sh" > Singularity.fsl
 sudo singularity build fsl.simg Singularity.fsl
 
 sudo docker run --rm kaczmarj/neurodocker:master generate singularity \
@@ -50,7 +51,7 @@ sudo singularity build heudiconv.simg Singularity.heudiconv
 
 sudo docker run --rm kaczmarj/neurodocker:master generate docker  \
   --base neurodebian:stretch-non-free   --pkg-manager apt   \
-  --install fsl-5.0-core fsl-mni152-templates \
+  --install fsl-5.0-core fsl-mni152-templates file \
   --install make gcc sqlite3 libsqlite3-dev python3-dev \
     libc6-dev python3-pip python3-setuptools python3-wheel \
   --run "pip3 install --system reprozip reprounzip" \
