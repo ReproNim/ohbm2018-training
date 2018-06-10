@@ -12,3 +12,9 @@ source $HOME/miniconda2/bin/deactivate
 cd ~
 rm ~/requirements.txt
 rm -rf ~/regreg
+
+# Install R packages
+sudo Rscript -e "install.packages('knitr')"
+sudo Rscript -e "install.packages('rmarkdown')"
+sudo Rscript -e "install.packages('mvtnorm')"
+sudo Rscript -e "install.packages('ggplot2')"

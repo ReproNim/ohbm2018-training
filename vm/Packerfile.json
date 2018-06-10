@@ -1,20 +1,21 @@
 {
   "builders": [
     {
-    "type": "virtualbox-ovf",
-    "format": "ova",
-    "vm_name": "repronim-training",
-    "output_directory": "output",
-    "source_path": "ubuntu-xenial-desktop.ova",
-    "ssh_timeout": "60m",
-    "ssh_username": "vagrant",
-    "ssh_password": "vagrant",
-    "shutdown_command": "sudo systemctl poweroff",
-    "vboxmanage": [
-      ["modifyvm", "{{.Name}}", "--memory", "2048"],
-      ["modifyvm", "{{.Name}}", "--cpus", "2"]
-    ]
-  }],
+      "type": "virtualbox-ovf",
+      "format": "ova",
+      "vm_name": "repronim-training",
+      "output_directory": "output",
+      "source_path": "ubuntu-xenial-desktop.ova",
+      "ssh_timeout": "60m",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "shutdown_command": "sudo systemctl poweroff",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--memory", "2048"],
+        ["modifyvm", "{{.Name}}", "--cpus", "2"]
+      ]
+    }
+  ],
 
   "provisioners": [
     {
