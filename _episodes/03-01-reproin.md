@@ -245,7 +245,7 @@ directly.
 > > % datalad run -m "Import stimulation events" \
 > >       --input inputs/rawdata/events.tsv \
 > >       --output sub-02/func/sub-02_task-oneback_run-01_events.tsv \
-> >       cp {{inputs}} {{outputs}}
+> >       cp {inputs} {outputs}
 > > ~~~
 > > {: .bash}
 > > It is not necessary to specify the name of the container to be used.
