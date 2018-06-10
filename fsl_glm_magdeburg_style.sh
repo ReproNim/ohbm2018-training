@@ -1,6 +1,13 @@
 #!/bin/bash
 
+#
+# THIS IS UNFINISHED WORK, PLEASE IGNORE
+#
+# Requires: datalad-hirni extension
+#
+
 set -e -u
+set -x
 
 # remember the original directory, just to make some admin parts easier
 # but generally irrelevant
@@ -9,50 +16,72 @@ wdir=$(mktemp -d)
 cd ${wdir}
 echo "Workdir at ${wdir}/localizerdemo"
 
+# prep faux raw data files (no repos yet)
+
+# pull down demo dataset
+datalad install -s https://github.com/datalad/example-dicom-functional.git demo_func
+# put DICOM in a tarball -- they are typically born this way 
+tar -C demo_func -czf s02_study_dicoms.tar.gz dicoms
+# clever experiment produces stimulation log in events.tsv format already
+cp demo_func/events.tsv s02_log.tsv
+
+# remove demo data repo, we start from a tarball and a log file
+datalad remove --nocheck demo_func
+
 # =========================
 # XXX actual demo from here
 
-# -- part 1: DICOM conversion ---
+# -- part 0: RAWRAW data ---
+# assemble all data artifacts as they were produced in a dataset that
+# represents the state of data acquisition that cannot be reproduced
+# without from scratch re-acquisition
+datalad hirni-create-study study_ds
+cd study_ds
 
-# we are creating a BIDS compatible variant of our MR dataset
+# import DICOM tarball, produces a dedicated subdataset for them, so their
+# identity can be tracked even of content is confidential and storage
+# remains in some closed facility
+datalad hirni-import-dcm ${wdir}/s02_study_dicoms.tar.gz
+
+# in the future there will be more import commands for stimulation logs of
+# known formats, eyetracking data, physio recording from different vendors, ...
+cp ${wdir}/s02_log.tsv 02/
+datalad add 02/ -m "Add stimulation log"
+
+# key point of this step is that there are snippets of study specification
+# files scattered across the repo (for each import) that are pre-populated
+# from datalad metadata, and can now be edited in order to assign "task"
+# conditions, fix up DICOM metadata entry mistakes, etc...
+# (GUI for that is in the works)
+cd ..
+
+# -- part 1: DICOM conversion ---
+# this BIDS version of the study data is a separate dataset
 datalad create bids
-# running everything from the root of a dataset enables the consistent
-# use of relative paths in all analysis code and makes an analysis
-# implementation more portable
 cd bids
+
+# conversion happens in a dedicated container so we know exactly what
+# was happening. DICOM converters are always broken...
+# get a ready-made container with the dicom converter
+datalad containers-add conversion -u shub://mih/ohbm2018-training:heudiconv
 
 # install input data as a subdataset, to enable identity tracking
 # an automated content retrieval, if necessary
-datalad install -d . -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
+datalad install -d. -s ../study_ds sourcedata
+mkdir -p inputs; ln -s ../sourcedata inputs/rawdata; datalad add inputs/rawdata
 
-# get a ready-made container with the dicom converter
-datalad containers-add heudiconv -u shub://mih/ohbm2018-training:heudiconv
-
-# with `datalad (containers-)run` we can capture basic provenance information on any
-# analysis step: what files where produced by which command, based on
-# what kind and state of input data
-# perform the DICOM conversion
-# containers-run will automatically execute this in the registered
-# container (no need to think about it)
-# --input ensures that datalad will obtain any matching files (if needed)
-# --ouput ensure that datalad unlocks any matching files so that
-#   the payload command can alter them.
-datalad containers-run -m "Convert sub-02 DICOMs into BIDS" \
-   --input inputs/rawdata/dicoms \
-   --output . \
-   heudiconv -f reproin -s 02 -c dcm2niix -b -l '' --minmeta -a . \
-       -o /tmp/heudiconv.sub-02 --files inputs/rawdata/dicoms
-
-# Simplify: https://github.com/datalad/datalad/issues/2512
-datalad run -m "Import stimulation events" \
-   --input inputs/rawdata/events.tsv \
-   --output sub-02/func/sub-02_task-oneback_run-01_events.tsv \
-   cp inputs/rawdata/events.tsv sub-02/func/sub-02_task-oneback_run-01_events.tsv
-
-# at this point we have a complete BIDS raw dataset in a clean Git repository
-# that is reproducible from the raw DICOM file state
+# Run conversion to BIDS
+# this will execute heudiconv inside, but instead of using the reproin heuristic
+# or the classical two-pass logic (try first, see what breaks, edit, try again)
+# it uses a deterministic that comes with datalad-hirni, which takes all needed
+# info from the studyspec snippets in the input RAW dataset
+datalad hirni-spec2bids -s sourcedata/02
 
 cd ..
+
+# the rest is pretty much identical (for now) to any other script with amazing
+# datalad functionality. Later there will be execution of "prepared command"
+# which could use BIDS-apps and other ready-to-use pipelines
 
 # -- part 2: (GLM) analysis ---
 
@@ -63,7 +92,7 @@ datalad create glm_analysis
 cd glm_analysis
 
 # get the BIDS raw dataset (no actual content)
-datalad install -d . -s ../bids inputs/rawdata
+datalad install -d. -s ../bids inputs/rawdata
 
 # convention: put all code in a code/ directory
 mkdir -p code
