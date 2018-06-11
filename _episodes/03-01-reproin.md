@@ -3,61 +3,61 @@ title: "ReproIn/DataLad: A complete portable and reproducible fMRI study from sc
 teaching: 5
 exercises: 25
 questions:
-- "How to implement basic neuroimaging study with complete and unambiguous provenance tracking of all actions?"
+- "How to implement a basic neuroimaging study with complete and unambiguous provenance tracking of all actions?"
 objectives:
-- "Conduct portable and reproducible analyses with ReproIn and DataLad from ground up."
+- "Conduct portable and reproducible analyses with ReproIn and DataLad from the ground up."
 keypoints:
 - "TODO"
 ---
 ## Introduction
 
-In this lesson we will carry out a full (although very basic) functional
-imaging study, going from raw data to complete data analysis results.  We will
-start from imaging data that is still in DICOM form, as it would be, if we had
-just finished scanning.  Importantly, we will conduct this analysis in a way
-that
+In this lesson, we will carry out a full (although very basic) functional
+imaging study, going from raw data to complete data-analysis results.  We will
+start from imaging data in DICOM format — as if we had just finished scanning.
+Importantly, we will conduct this analysis so that it:
 
-- leaves a comprehensive "paper-trail" of all performed steps: everything
+- leaves a comprehensive "paper trail" of all performed steps; everything
   will be tracked via version control
 
 - structures components in a way that facilitates re-use
 
-- perform all critical computation in containerized computational environments
+- performs all critical computation in containerized computational environments
   for improved reproducibility and portability
 
-For all steps of this study we will use [DataLad] to achieve these goals with relatively
-minimal effort
+For all steps of this study, we will use [DataLad] to achieve these goals with
+relatively minimal effort
 
 
-> #### DataLad extensions
-> 
+> #### DataLad Extensions
+>
 > [DataLad] itself is a data management package that is completely agnostic of
 > data formats and analysis procedures. However, DataLad functionality can be
 > extended via so-called *extension packages* that add additional support for
-> particular data formats, and workflows. In this lesson we will make use
+> particular data formats and workflows. In this lesson, we will make use
 > of two extension packages: [datalad-neuroimaging] and [datalad-container].
 >
 > {:callout}
 
 
-## Prepare data for analysis
+## Prepare the Data for Analysis
 
-In order to be able to analyze imaging data we typically have to convert them
-from their original DICOM format into NIfTI files. While there are many
-programs for this purpose that we could use to create some kind of ad-hoc
-directory structure, we can gain a lot by adopting the [BIDS] standard.  There
-are many advantages of doing so, but the most important for us is that we have
-much less work to do when using BIDS, in comparision to inventing something new.
+Before analyzing imaging data, we typically have to convert them from their
+original DICOM format into NIfTI files.
 
 The data we are working with already follows the [ReproIn] naming conventions,
 and the [HeuDiConv] converter can use this information to automatically create
 a BIDS-compliant dataset for us.
 
+We gain a lot here by adopting the [BIDS] standard. Up front, it saves us the
+effort of creating an ad-hoc directory structure. But more importantly, by
+structuring our data in a standard way (and an increasingly common one), it
+opens up possibilities for us to easily feed our dataset into existing analysis
+pipelines and tools.
+
 [![ReproIn Convention](../fig/dbic-conversions.png)](https://github.com/repronim/reproin#overall-workflow)
 
-Our first goal is to convert our DICOM data into a DataLad
-dataset in BIDS format.
-
+Our first goal is to convert our DICOM data into a DataLad dataset in BIDS
+format.
 
 > ## Task: Create a new DataLad dataset called `bids`
 >
@@ -72,43 +72,44 @@ dataset in BIDS format.
 >
 {: .challenge}
 
-We now have the new dataset in a directory `bids/`. For all further commands
-we will change into this directory to be able to use relative paths.
+We now have the new dataset in the `bids/` directory. We will change into this
+directory so that all further commands will be able to use relative paths.
 
 > ~~~
 > % cd bids
 > ~~~
 > {: .bash}
 
-> #### Advantages of relative path specification
-> 
-> In many cases it doesn't matter whether one uses absolute or relative paths.
-> However, it matters a lot in terms of portability. Using relative paths makes
-> it possible to move a dataset to another folder (or give it to a colleague
-> using a different computer), and still have all code working.
+> #### Advantages of Relative Path Specification
+>
+> In many cases, it does not matter whether one uses absolute vs relative paths,
+> but when it comes to portability, it has a great impact. Using relative paths
+> makes it possible to move a dataset to another folder on your system (or give
+> it to a colleague using a different computer) and still have everything
+> intra-connected and working as it should.
 >
 > {:callout}
 
-When using DataLad, it is best to always run scripts from the root directory
-of a dataset, and code all scripts using paths that are relative to this
-root directory. In order to makes this work, a dataset should contain all
-inputs of a processing step (all code, and all data).
+When using DataLad, it is best to always run scripts from the root directory of
+the dataset — and also code all scripts to use paths that are relative to this
+root directory. For this to work, a dataset must contain all of the inputs of a
+processing step (all code; all data).
 
 That means that we should add the raw DICOM files to our BIDS dataset. In our
-case these DICOMs are already available in a DataLad dataset from
+case, these DICOMs are already available in a DataLad dataset from
 [GitHub](https://github.com/datalad/example-dicom-functional.git) that we can
 add as a *subdataset* to our BIDS dataset.
 
 > ## Task: Add DICOM data as a subdataset in `inputs/rawdata`
 >
 > Use the [datalad install] command. Make sure to identify the `bids` dataset
-> as the dataset to operate on to get DICOMs registered as a subdataset
-> (and not just downloaded as a standalone dataset). Use the [datalad subdatasets]
-> command to verify the result.
+> (the current directory) as the dataset to operate on in order to register the
+> DICOMs as a subdataset (and not simply downloaded as a standalone dataset).
+> Then, use the [datalad subdatasets] command to verify the result.
 >
 > > ## Solution
 > > ~~~
-> > % datalad install -d . -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
+> > % datalad install --dataset . --source https://github.com/datalad/example-dicom-functional.git inputs/rawdata
 > > % datalad subdatasets
 > > ~~~
 > > {: .bash}
@@ -116,24 +117,19 @@ add as a *subdataset* to our BIDS dataset.
 >
 {: .challenge}
 
+### Working With Containers
 
-At this point we are pretty much ready to convert our DICOMs. However, this is
-also a good moment to pause and remember that any software you are using has
-the potential to be broken (and probably actually is to some degree). DICOM
-conversion is the first transformation that is done to the raw data. If there
-is a problem with this step, it can affect all subsequent analysis steps and
-the final results. Hence we want to make extra sure that we know exactly what
-software we are using and that we can go back to it at a later stage, should we
-have the need to investigate and issue.
+Any software you are using (and at any step) has the potential to have
+bugs/errors/horrifying-gremlins — and arguably already does, you just may not
+know it yet. Hence we take extra care to know *exactly* what software we are
+using and that we can go back to it at a later stage, should we have the need to
+investigate an issue.
 
-### Working with containers
-
-Containerized computational environments are a great way to handle this situation.
-DataLad (via its [datalad-container] extension) provides support for managing
-and using such environments for data processing. This basic idea is to also add
-an image of a computational environment to a DataLad dataset (just like any other)
-file. This way we know exactly what we are using, and where to get it again
-in the future.
+Containerized computational environments are a great way to handle this problem.
+DataLad (via its [datalad-container] extension) provides support for using and
+managing such environments for data processing. We can add an image of a
+computational environment to a DataLad dataset (just like any other) file, so we
+know exactly what we are using and where to get it again in the future.
 
 A ready-made [singularity] container with the [HeuDiConv] DICOM converter
 (~160 MB) is available from [singularity-hub] at:
@@ -142,12 +138,12 @@ shub://mih/ohbm2018-training:heudiconv
 > ## Task: Add the HeuDiConv container to the dataset
 >
 > Use the [datalad containers-add] command to add this container under the name
-> `heudiconv`, and the [datalad containers-list] command to verify that
+> `heudiconv`. Then use the [datalad containers-list] command to verify that
 > everything worked.
 >
 > > ## Solution
 > > ~~~
-> > % datalad containers-add heudiconv -u shub://mih/ohbm2018-training:heudiconv
+> > % datalad containers-add heudiconv --url shub://mih/ohbm2018-training:heudiconv
 > > % datalad containers-list
 > > ~~~
 > > {: .bash}
@@ -155,19 +151,17 @@ shub://mih/ohbm2018-training:heudiconv
 >
 {: .challenge}
 
-We have now reached the point where our dataset trackes all input data, and
-the computational environment for the DICOM conversion. This means that we
-have a complete record of all components (so far) in this one dataset that
-we can reference via relative paths from the dataset root. This is a very good
-starting point for conducting a portable analysis.
+Our dataset now tracks all input data and the computational environment for the
+DICOM conversion. This means that we have a complete record of all components
+(thus far) in this one dataset that we can reference via relative paths from the
+dataset root. This is a good starting point for conducting a portable analysis.
 
-Datalad comes with two command to run arbitrary shell command and capture there
-output in a dataset. These command are [datalad run] and [datalad
-containers-run] \(provided by the [datalad-container] extension). Both commands
-are very similar, in fact there interface is almost identical. The big
+[datalad run] and [datalad containers-run] \(provided by the [datalad-container]
+extension) allow a user to run arbitrary shell commands and capture the output
+in a dataset. By design, both commands behave nearly identically. The primary
 difference is that [datalad run] executes commands in the local environment,
-[datalad containers-run] executes commands in a containerized computational
-environment. Therefore we are going to use the latter.
+whereas [datalad containers-run] executes commands inside of a containerized
+environment. Here, we will use the latter.
 
 > ## Task: Convert DICOM using HeuDiConv from the container
 >
@@ -178,13 +172,14 @@ environment. Therefore we are going to use the latter.
 >
 > It essentially tells it to use the [ReproIn heuristic] to convert the
 > DICOMs using the subject identifier `02`, with the DICOM converter
-> `dcm2niix` into the BIDS format. As the last and most important argument
-> the directory with the DICOMs is given.
+> `dcm2niix`, into the BIDS format. The last argument is the directory
+> containing the DICOMs.
 >
-> Run this command through [datalad containers-run], such that the results
-> of this command are saved using a meaningful commit message. If something
-> goes wrong, remember that you can `git reset --hard` the dataset repository
-> to throw away anything that wasn't committed yet.
+> Run this command using [datalad containers-run], making sure to include a
+> meaningful commit message, so that the results of this command are saved with
+> a meaningful context. If anything goes wrong when running the command,
+> remember that you can use `git reset --hard` on the dataset repository to
+> throw away anything that is not yet committed.
 >
 > Once done, use the [datalad diff] command to compare the dataset to the
 > previous saved state (`HEAD~1`) to get an instant summary of the changes.
@@ -200,36 +195,36 @@ environment. Therefore we are going to use the latter.
 > > ~~~
 > > {: .bash}
 > > It is not necessary to specify the name of the container to be used.
-> > If there is only one container known to a dataset [datalad containers-run]
+> > If there is only one container known to a dataset, [datalad containers-run]
 > > is clever enough to use that one.
 > {: .solution}
 >
 {: .challenge}
 
-You can now confirm that a NIfTI file has been added to the dataset, and its
+You can now confirm that a NIfTI file has been added to the dataset and that its
 name is compliant with the [BIDS] standard. Information such as the task-label
-has been extracted from the imaging sequence description automatically.
+has been automatically extracted from the imaging sequence description.
 
-There is only one very last thing missing before we can analyze our functional
+There is only one thing missing before we can analyze our functional
 imaging data: we need to know what stimulation was done at which point during
-the scan. Thanksfully the data was collected using an implementation that
-experted this information directly in the [BIDS] `events.tsv` format. The
-file already came with our DICOM dataset and can be found at
-`inputs/rawdata/events.tsv`. The only thing we need to do is to copy it at
-the right location under the BIDS-mandated name.
+the scan. Thankfully, the data was collected using an implementation that
+exported this information directly in the [BIDS] `events.tsv` format. The
+file came with our DICOM dataset and can be found at
+`inputs/rawdata/events.tsv`. All we need to do is copy it to the right location
+under the BIDS-mandated name.
 
-To do that, we could simple use the `cp` shell command. However, in the
-history of the dataset it would look like this file came out of nowhere.
-Again, we can use DataLad to capture this information. For such a simple
-thing like `cp` we do not need a container, so let's use [datalad run]
-directly.
+We can use `cp` to do this easily, but the copying step itself would not be
+entered into the dataset's history and thus the file would be added with no
+indication of where it came from. A good commit message can help with that, but
+what would be even better is to run `cp` using [datalad run] to capture this
+information.
 
 > ## Task: Copy the event.tsv file to its correct location via `run`
 >
-> BIDS requires to put this file at `sub-02/func/sub-02_task-oneback_run-01_events.tsv`.
-> Use the [datalad run] command to execute the shell `cp` command to
-> implement this step. This time, however, use the options `--input` and
-> `--output` to inform [datalad run] what files need tp be available,
+> BIDS requires that this file be located at `sub-02/func/sub-02_task-oneback_run-01_events.tsv`.
+> Use the [datalad run] command to execute the `cp` command to implement this
+> step. This time, however, use the options `--input` and
+> `--output` to inform [datalad run] what files need to be available
 > and what locations need to be writeable for this command.
 >
 > In order to avoid duplication, [datalad run] supports placeholder labels
@@ -248,22 +243,18 @@ directly.
 > >       cp {inputs} {outputs}
 > > ~~~
 > > {: .bash}
-> > It is not necessary to specify the name of the container to be used.
-> > If there is only one container known to a dataset [datalad containers-run]
-> > is clever enough to use that one.
 > {: .solution}
 >
 {: .challenge}
 
-And now we are ready with the data preparation. We have (the skeleton) of a
+We are now done with the data preparation. We have the skeleton of a
 BIDS-compliant dataset that contains all data in the right format and using the
-correct file names. In addition is also tracked the computational environment
-used to perform the DICOM conversion, and also tracks a separate dataset
-with the input DICOM data. This means we can trace every single file in this
-dataset back to its origin, including the commands and inputs used to create
-it.
+correct file names. In addition, the computational environment used to perform
+the DICOM conversion is tracked, as well as a separate dataset with the input
+DICOM data. This means we can trace every single file in this dataset back to
+its origin, including the commands and inputs used to create it.
 
-This dataset is now ready. It can be archived, and used as input for one or more
+This dataset is now ready. It can be archived and used as input for one or more
 analyses of any kind. Let's leave the dataset directory now:
 
 > ~~~
@@ -271,24 +262,24 @@ analyses of any kind. Let's leave the dataset directory now:
 > ~~~
 > {: .bash}
 
-## A reproducible GLM demo analysis
+## A Reproducible GLM Demo Analysis
 
 With our raw data prepared in BIDS format, we can now conduct an analysis.
 We will implement a very basic first-level GLM analysis using FSL that runs
 in just a few minutes. We will follow the same principles that we already
-applied when we prepared the BIDS dataset: complete capture of all inputs,
-computational environments and code, as well as outputs.
+applied when we prepared the BIDS dataset: the complete capture of all inputs,
+computational environments, code, and outputs.
 
 Importantly, we will conduct our analysis in a new dataset. The raw BIDS
 dataset is suitable for many different analysis than can all use that dataset
-as input. In order to avoid wasteful duplication and improve the modularity
+as input. In order to avoid wasteful duplication and to improve the modularity
 of our data structures, we will merely use the BIDS dataset as an input,
 but we will *not* modify it in any way.
 
 > ## Task: Create a new DataLad dataset called `glm_analysis`
 >
-> Use the [datalad create] command, and subsequently change into the
-> root directory of the newly created dataset.
+> Use the [datalad create] command. Then change into the root directory of the
+> newly created dataset.
 >
 > > ## Solution
 > > ~~~
@@ -300,20 +291,20 @@ but we will *not* modify it in any way.
 >
 {: .challenge}
 
-Following the same logic and commands as previously, we add the raw BIDS
+Following the same logic and commands as before, we will add the raw BIDS
 dataset as a subdataset of the new analysis dataset to enable comprehensive
 tracking of all input data within the analysis dataset.
 
 > ## Task: Add BIDS data as a subdataset in `inputs/rawdata`
 >
 > Use the [datalad install] command. Make sure to identify the analysis dataset
-> as the dataset to operate on to get the BIDS dataset registered as a subdataset
-> (and not just as a standalone dataset). Use the [datalad subdatasets]
-> command to verify the result.
+> (the current directory) as the dataset to operate on in order to register the
+> BIDS dataset as a subdataset (and not just as a standalone dataset). Then, use
+> the [datalad subdatasets] command to verify the result.
 >
 > > ## Solution
 > > ~~~
-> > % datalad install -d . -s ../bids inputs/rawdata
+> > % datalad install --dataset . --source ../bids inputs/rawdata
 > > % datalad subdatasets
 > > ~~~
 > > {: .bash}
@@ -321,17 +312,17 @@ tracking of all input data within the analysis dataset.
 >
 {: .challenge}
 
-Regarding the layout of this analysis dataset we cannot relying on automatic
-tools and a comprehensive standard yet (but such guidelines are actively being
-worked on). However, Datalad nevertheless aids efforts to bring order to the
-chaos. Anyone can develop their own ideas on how a dataset should be
-structured, and implement these concepts in *dataset procedures* that can be
+Regarding the layout of this analysis dataset, we unfortunately cannot yet rely
+on automatic tools and a comprehensive standard (but such guidelines are
+actively being worked on). However, DataLad nevertheless aids efforts to bring
+order to the chaos. Anyone can develop their own ideas on how a dataset should
+be structured, and implement these concepts in *dataset procedures* that can be
 executed using the [datalad run-procedure] command.
 
-Here we are going to adopt the YODA principles, a set of simple rules on how to
+Here we are going to adopt the YODA principles: a set of simple rules on how to
 structure analysis dataset. You can learn more about YODA at OHBM poster 2046
-(*YODA: YODA’s organigram on data analysis*), but here the only relevant aspect
-is that we want to keep all analysis scripts in the subdirectory `code/` of
+(*YODA: YODA’s organigram on data analysis*). But here, the only relevant aspect
+is that we want to keep all analysis scripts in the `code/` subdirectory of
 this dataset. We can get a readily configured dataset by running the YODA
 setup procedure:
 
@@ -348,19 +339,19 @@ setup procedure:
 >
 {: .challenge}
 
-Now we are almost ready to fire-up FSL for our GLM analysis. However, we need two
-pieces of custom code:
+Before we can fire up FSL for our GLM analysis, we need two pieces of custom
+code:
 
 1. a small script that can convert BIDS events.tsv files into the EV3 format that
    FSL can understand: available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh>
 
 2. an FSL analysis configuration template script available at: <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf>
 
-Any custom code needs to be tracked, if we want to achieve a complete record of
-how an analysis was conducted. Hence we have to store those scripts in our analysis
+Any custom code needs to be tracked if we want to achieve a complete record of
+how an analysis was conducted. Hence we will store those scripts in our analysis
 dataset.
 
-> ## Download the scripts and include them in the analysis dataset
+> ## Download the Scripts and Include Them in the Analysis Dataset
 >
 > Use the [datalad download-url] command. Place the scripts in the `code/` directory
 > under their respective names. Check `git log` to confirm that the commit message
@@ -368,31 +359,31 @@ dataset.
 >
 > > ## Solution
 > > ~~~
-> > % datalad download-url -O code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
-> > % datalad download-url -O code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
+> > % datalad download-url --path code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
+> > % datalad download-url --path code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
 > > % git log
-> > 
+> >
 > > ~~~
 > > {: .bash}
 > {: .solution}
 >
 {: .challenge}
 
-At this point our analysis dataset contains all required inputs. We only have to
-run our custom code to produce the inputs in the format that FSL expects.
-First, let's convert the events.tsv file into EV3 format files.
+At this point, our analysis dataset contains all of the required inputs. We only
+have to run our custom code to produce the inputs in the format that FSL
+expects. First, let's convert the events.tsv file into EV3 format files.
 
 > ## Task: Run the converter script for the event timing information
 >
 > Use the [datalad run] command to execute the script at `code/events2ev3.sh`.
-> it requires the name of the output directory (use `sub-02`) and the location
-> of the BIDS events.tsv file to convert. Use the `--input` and `--output`
+> It requires the name of the output directory (use `sub-02`) and the location
+> of the BIDS events.tsv file to be converted. Use the `--input` and `--output`
 > options to let DataLad automatically manage these files for you.
 > **Important**: This BIDS subdataset does not actually have the content for the
 > events.tsv file yet. If you use `--input` correctly, DataLad will obtain the
 > file content for you automatically. Check the output carefully, the script is
-> written in a sloppy way that will produce some output even things go wrong.
-> Each generated file must have three numbers per line.
+> written in a sloppy way that will produce some output even when things go
+> wrong. Each generated file must have three numbers per line.
 >
 > > ## Solution
 > > ~~~
@@ -406,13 +397,12 @@ First, let's convert the events.tsv file into EV3 format files.
 >
 {: .challenge}
 
-And finally we only have left to configure the desired first-level GLM analysis
-with FSL. The following command will create a working configuration from the
-template we have stored in `code/`. It uses the mighty `sed` editor. That one is
-mind-boggling, but once you know how to use it, you never want to forget about
-it again. Let's also run that through [datalad run], so we know forever that we didn't
-type this in by hand, but actually generated it from a template (that we could
-alter and then regenerate this file).
+All we have left is to configure the desired first-level GLM analysis with FSL.
+The following command will create a working configuration from the template we
+stored in `code/`. It uses the arcane, yet powerful `sed` editor. We will again
+run use [datalad run] to invoke our command, so that we store in the history
+*how* this template was generated (so that we may audit, alter, or regenerate
+this file in the future — fearlessly).
 
 > ~~~
 > datalad run \
@@ -423,23 +413,20 @@ alter and then regenerate this file).
 > ~~~
 > {: .bash}
 
-Ready for FSL!
-
-But hold on. We cannot simply run FSL. If we were concerned that a simple DICOM
-converter can be buggy, we absolutely have to handle a software as complex as
-FSL with the same care. So let's add a container to this analysis dataset too.
-A ready-made container with FSL (~260 MB) is available from
+Now we're ready for FSL! And since FSL is certainly not a simple, system
+program, we will again use it in a container and add that container to this
+analysis dataset. A ready-made container with FSL (~260 MB) is available from
 shub://mih/ohbm2018-training:fsl
 
 > ## Task: Add a container with FSL
 >
 > Use the [datalad containers-add] command to add this container under the name
-> `fsl`, and the [datalad containers-list] command to verify that
+> `fsl`. Then use the [datalad containers-list] command to verify that
 > everything worked.
 >
 > > ## Solution
 > > ~~~
-> > % datalad containers-add fsl -u shub://mih/ohbm2018-training:fsl
+> > % datalad containers-add fsl --url shub://mih/ohbm2018-training:fsl
 > > % datalad containers-list
 > > ~~~
 > > {: .bash}
@@ -447,14 +434,14 @@ shub://mih/ohbm2018-training:fsl
 >
 {: .challenge}
 
-And finally, no but, no waiting: We can run FSL. The command is as short as
-`feat sub-02/1stlvl_design.fsf`. However, in order to achieve the most reproducible
-and most portable execution we should tell the [datalad containers-run] command
-what the inputs and outputs are. DataLad will then be able to obtain the required
-NIfTI time series file form the BIDS raw subdataset.
+The command we will run is a simple `feat sub-02/1stlvl_design.fsf`. However, in
+order to achieve the most reproducible and most portable execution we should
+tell the [datalad containers-run] command what the inputs and outputs are.
+DataLad will then be able to obtain the required NIfTI time series file from the
+BIDS raw subdataset.
 
-Please run the following command as soon as possible, it takes around 5min to
-complete on an average system.
+Please run the following command as soon as possible; it takes around 5 minutes
+to complete on an average system.
 
 > ~~~
 > datalad containers-run -m "sub-02 1st-level GLM" \
@@ -465,7 +452,7 @@ complete on an average system.
     feat {inputs[0]}
 > ~~~
 
-Once this command finished, DataLad will have captures the entire FSL output,
+Once this command finished, DataLad will have captured the entire FSL output,
 and the dataset will contain a complete record all the way from the input BIDS
 dataset to the GLM results (which, by the way, performed an FFA localization on
 a real BOLD imaging dataset, take a look!). The BIDS subdataset in turn has a
@@ -474,7 +461,7 @@ complete record of all processing down from the raw DICOMs onwards.
 TODO: rerun
 
 
-## Get ready for the afterlife
+## Get Ready for the Afterlife
 
 And because this record is complete, we can now simply throw away the input BIDS
 **subdataset** of our analysis.
@@ -487,7 +474,7 @@ And because this record is complete, we can now simply throw away the input BIDS
 > > ## Solution
 > > ~~~
 > > % datalad diff --revision HEAD~10 -- inputs
-> > % datalad uninstall -d . inputs -r
+> > % datalad uninstall --dataset . inputs --recursive
 > > ~~~
 > > {: .bash}
 > {: .solution}
