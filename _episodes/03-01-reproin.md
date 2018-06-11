@@ -108,7 +108,7 @@ add as a *subdataset* to our BIDS dataset.
 >
 > > ## Solution
 > > ~~~
-> > % datalad install -d . -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
+> > % datalad install --dataset . --source https://github.com/datalad/example-dicom-functional.git inputs/rawdata
 > > % datalad subdatasets
 > > ~~~
 > > {: .bash}
@@ -147,7 +147,7 @@ shub://mih/ohbm2018-training:heudiconv
 >
 > > ## Solution
 > > ~~~
-> > % datalad containers-add heudiconv -u shub://mih/ohbm2018-training:heudiconv
+> > % datalad containers-add heudiconv --url shub://mih/ohbm2018-training:heudiconv
 > > % datalad containers-list
 > > ~~~
 > > {: .bash}
@@ -313,7 +313,7 @@ tracking of all input data within the analysis dataset.
 >
 > > ## Solution
 > > ~~~
-> > % datalad install -d . -s ../bids inputs/rawdata
+> > % datalad install --dataset . --source ../bids inputs/rawdata
 > > % datalad subdatasets
 > > ~~~
 > > {: .bash}
@@ -368,8 +368,8 @@ dataset.
 >
 > > ## Solution
 > > ~~~
-> > % datalad download-url -O code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
-> > % datalad download-url -O code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
+> > % datalad download-url --path code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
+> > % datalad download-url --path code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
 > > % git log
 > > 
 > > ~~~
@@ -439,7 +439,7 @@ shub://mih/ohbm2018-training:fsl
 >
 > > ## Solution
 > > ~~~
-> > % datalad containers-add fsl -u shub://mih/ohbm2018-training:fsl
+> > % datalad containers-add fsl --url shub://mih/ohbm2018-training:fsl
 > > % datalad containers-list
 > > ~~~
 > > {: .bash}
@@ -487,7 +487,7 @@ And because this record is complete, we can now simply throw away the input BIDS
 > > ## Solution
 > > ~~~
 > > % datalad diff --revision HEAD~10 -- inputs
-> > % datalad uninstall -d . inputs -r
+> > % datalad uninstall --dataset . inputs --recursive
 > > ~~~
 > > {: .bash}
 > {: .solution}
