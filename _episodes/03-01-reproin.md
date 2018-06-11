@@ -3,38 +3,37 @@ title: "ReproIn/DataLad: A complete portable and reproducible fMRI study from sc
 teaching: 5
 exercises: 25
 questions:
-- "How to implement basic neuroimaging study with complete and unambiguous provenance tracking of all actions?"
+- "How to implement a basic neuroimaging study with complete and unambiguous provenance tracking of all actions?"
 objectives:
-- "Conduct portable and reproducible analyses with ReproIn and DataLad from ground up."
+- "Conduct portable and reproducible analyses with ReproIn and DataLad from the ground up."
 keypoints:
 - "TODO"
 ---
 ## Introduction
 
-In this lesson we will carry out a full (although very basic) functional
-imaging study, going from raw data to complete data analysis results.  We will
-start from imaging data that is still in DICOM form, as it would be, if we had
-just finished scanning.  Importantly, we will conduct this analysis in a way
-that
+In this lesson, we will carry out a full (although very basic) functional
+imaging study, going from raw data to complete data-analysis results.  We will
+start from imaging data in DICOM format — as if we had just finished scanning.
+Importantly, we will conduct this analysis so that it:
 
-- leaves a comprehensive "paper-trail" of all performed steps: everything
+- leaves a comprehensive "paper trail" of all performed steps; everything
   will be tracked via version control
 
 - structures components in a way that facilitates re-use
 
-- perform all critical computation in containerized computational environments
+- performs all critical computation in containerized computational environments
   for improved reproducibility and portability
 
-For all steps of this study we will use [DataLad] to achieve these goals with relatively
-minimal effort
+For all steps of this study, we will use [DataLad] to achieve these goals with
+relatively minimal effort
 
 
 > #### DataLad Extensions
-> 
+>
 > [DataLad] itself is a data management package that is completely agnostic of
 > data formats and analysis procedures. However, DataLad functionality can be
 > extended via so-called *extension packages* that add additional support for
-> particular data formats, and workflows. In this lesson we will make use
+> particular data formats and workflows. In this lesson, we will make use
 > of two extension packages: [datalad-neuroimaging] and [datalad-container].
 >
 > {:callout}
