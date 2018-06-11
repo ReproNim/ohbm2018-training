@@ -41,22 +41,23 @@ relatively minimal effort
 
 ## Prepare the Data for Analysis
 
-In order to be able to analyze imaging data we typically have to convert them
-from their original DICOM format into NIfTI files. While there are many
-programs for this purpose that we could use to create some kind of ad-hoc
-directory structure, we can gain a lot by adopting the [BIDS] standard.  There
-are many advantages of doing so, but the most important for us is that we have
-much less work to do when using BIDS, in comparision to inventing something new.
+Before analyzing imaging data, we typically have to convert them from their
+original DICOM format into NIfTI files.
 
 The data we are working with already follows the [ReproIn] naming conventions,
 and the [HeuDiConv] converter can use this information to automatically create
 a BIDS-compliant dataset for us.
 
+We gain a lot here by adopting the [BIDS] standard. Up front, it saves us the
+effort of creating an ad-hoc directory structure. But more importantly, by
+structuring our data in a standard way (and an increasingly common one), it
+opens up possibilities for us to easily feed our dataset into existing analysis
+pipelines and tools.
+
 [![ReproIn Convention](../fig/dbic-conversions.png)](https://github.com/repronim/reproin#overall-workflow)
 
-Our first goal is to convert our DICOM data into a DataLad
-dataset in BIDS format.
-
+Our first goal is to convert our DICOM data into a DataLad dataset in BIDS
+format.
 
 > ## Task: Create a new DataLad dataset called `bids`
 >
@@ -71,8 +72,8 @@ dataset in BIDS format.
 >
 {: .challenge}
 
-We now have the new dataset in a directory `bids/`. For all further commands
-we will change into this directory to be able to use relative paths.
+We now have the new dataset in the `bids/` directory. We will change into this
+directory so that all further commands will be able to use relative paths.
 
 > ~~~
 > % cd bids
@@ -80,30 +81,31 @@ we will change into this directory to be able to use relative paths.
 > {: .bash}
 
 > #### Advantages of Relative Path Specification
-> 
-> In many cases it doesn't matter whether one uses absolute or relative paths.
-> However, it matters a lot in terms of portability. Using relative paths makes
-> it possible to move a dataset to another folder (or give it to a colleague
-> using a different computer), and still have all code working.
+>
+> In many cases, it does not matter whether one uses absolute vs relative paths,
+> but when it comes to portability, it has a great impact. Using relative paths
+> makes it possible to move a dataset to another folder on your system (or give
+> it to a colleague using a different computer) and still have everything
+> intra-connected and working as it should.
 >
 > {:callout}
 
-When using DataLad, it is best to always run scripts from the root directory
-of a dataset, and code all scripts using paths that are relative to this
-root directory. In order to makes this work, a dataset should contain all
-inputs of a processing step (all code, and all data).
+When using DataLad, it is best to always run scripts from the root directory of
+the dataset — and also code all scripts to use paths that are relative to this
+root directory. For this to work, a dataset must contain all of the inputs of a
+processing step (all code; all data).
 
 That means that we should add the raw DICOM files to our BIDS dataset. In our
-case these DICOMs are already available in a DataLad dataset from
+case, these DICOMs are already available in a DataLad dataset from
 [GitHub](https://github.com/datalad/example-dicom-functional.git) that we can
 add as a *subdataset* to our BIDS dataset.
 
 > ## Task: Add DICOM data as a subdataset in `inputs/rawdata`
 >
 > Use the [datalad install] command. Make sure to identify the `bids` dataset
-> as the dataset to operate on to get DICOMs registered as a subdataset
-> (and not just downloaded as a standalone dataset). Use the [datalad subdatasets]
-> command to verify the result.
+> (the current directory) as the dataset to operate on in order to register the
+> DICOMs as a subdataset (and not simply downloaded as a standalone dataset).
+> Then, use the [datalad subdatasets] command to verify the result.
 >
 > > ## Solution
 > > ~~~
@@ -115,15 +117,14 @@ add as a *subdataset* to our BIDS dataset.
 >
 {: .challenge}
 
-
-At this point we are pretty much ready to convert our DICOMs. However, this is
-also a good moment to pause and remember that any software you are using has
-the potential to be broken (and probably actually is to some degree). DICOM
-conversion is the first transformation that is done to the raw data. If there
-is a problem with this step, it can affect all subsequent analysis steps and
-the final results. Hence we want to make extra sure that we know exactly what
-software we are using and that we can go back to it at a later stage, should we
-have the need to investigate and issue.
+At this point we are ready to convert our DICOMs. However, this is also a good
+moment to pause and remember that any software you are using has the potential
+to be broken (and probably actually is to some degree). DICOM conversion is the
+first transformation that is done to the raw data. If there is a problem with
+this step, it can affect all subsequent analysis steps and the final results.
+Hence we want to make extra sure that we know exactly what software we are using
+and that we can go back to it at a later stage, should we have the need to
+investigate an issue.
 
 ### Working With Containers
 
