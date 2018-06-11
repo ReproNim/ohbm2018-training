@@ -75,13 +75,13 @@ documentation.  It gets presented to you in a `pager`---a basic command
 for viewing and navigation of the text file.  The most common pages are
 `more` and `less`.  Some useful `less` shortcuts include
 
-- `h` - help
-- `<`, `Home` - beginning of the document
-- `>`, `End` - end of the document
-- `SPACE`, `PgDn`, `f` - page down
-- `PgUp`, `b` - page up
-- `/` - search
-- `q` - exit
+- <kbd>h</kbd> - help
+- <kbd><</kbd>, <kbd>Home</kbd> - beginning of the document
+- <kbd>></kbd>, <kbd>End</kbd> - end of the document
+- <KBD>SPACE</KBD>, <kbd>PgDn</kbd>, <kbd>f</kbd> - page down
+- <kbd>PgUp</kbd>, <kbd>b</kbd> - page up
+- <kbd>/</kbd> - search
+- <kbd>q</kbd> - exit
 
 
 > ## Task: Navigate `man` for `git`
@@ -116,8 +116,8 @@ one](https://scotch.io/tutorials/getting-started-with-vim-an-interactive-guide))
 Here we will just teach you how to exit Vi/Vim if you end up in this
 unknown territory:
 
-- `ESC` `Shift-z` `Shift-q` to quick without saving
-- `ESC` `Shift-z` `Shift-z` to quick saving changes.
+- <kbd>ESC</kbd> <kbd>Shift-z</kbd> <kbd>Shift-q</kbd> to quick without saving
+- <kbd>ESC</kbd> <kbd>Shift-z</kbd> <kbd>Shift-z</kbd> to quick saving changes.
 
 ## Some important environment variables and commands
 
@@ -197,25 +197,25 @@ indispensable to
 
 Some of the main keyboard shortcuts to navigate shell history are
 
-`Ctrl-p` | Previous line in the history
-`Ctrl-n` | Next line in the history
-**`Ctrl-r`** | **Bring up next match backwards in shell history** (very very useful one)
+<kbd>Ctrl-p</kbd> | Previous line in the history
+<kbd>Ctrl-n</kbd> | Next line in the history
+<kbd>Ctrl-r</kbd> | **Bring up next match backwards in shell history** (very very useful one)
 
-You can hit `Ctrl-r` and start typing some portion of the command you
-remember running.  Hitting `Ctrl-r` again will bring up the next match
+You can hit <kbd>Ctrl-r</kbd> and start typing some portion of the command you
+remember running.  Hitting <kbd>Ctrl-r</kbd> again will bring up the next match
 and so on. You will leave "search" mode as soon as you use some other
-command line navigation command (e.g. `Ctrl-e`).
+command line navigation command (e.g. <kbd>Ctrl-e</kbd>).
 
-`Alt-.` | Insert last position argument of the previous command.
+<kbd>Alt-.</kbd> | Insert last position argument of the previous command.
 
-Hitting `Alt-.` again will bring up the last argument of the previous
+Hitting <kbd>Alt-.</kbd> again will bring up the last argument of the previous
 command and so on.
 
 > ## History navigation exercise
 >
 > Inspect your shell command history you have run so far:
 > 1. use `history` and `uniq` to find you most frequently used command
-> 2. experiment using `Ctrl-r` to find commands next to the most
+> 2. experiment using <kbd>Ctrl-r</kbd> to find commands next to the most
 >    popular command
 {: .challenge}
 
