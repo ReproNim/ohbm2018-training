@@ -166,7 +166,7 @@ impact what external commands and libraries you are using.
 {: .challenge}
 
 
-## Shell History
+## Shell history
 
 By default, a shell records the history of commands you have run.  You
 could access it using the `history` command.  When you exit the shell,
