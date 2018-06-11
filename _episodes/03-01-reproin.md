@@ -267,19 +267,19 @@ analyses of any kind. Let's leave the dataset directory now:
 With our raw data prepared in BIDS format, we can now conduct an analysis.
 We will implement a very basic first-level GLM analysis using FSL that runs
 in just a few minutes. We will follow the same principles that we already
-applied when we prepared the BIDS dataset: complete capture of all inputs,
-computational environments and code, as well as outputs.
+applied when we prepared the BIDS dataset: the complete capture of all inputs,
+computational environments, code, and outputs.
 
 Importantly, we will conduct our analysis in a new dataset. The raw BIDS
 dataset is suitable for many different analysis than can all use that dataset
-as input. In order to avoid wasteful duplication and improve the modularity
+as input. In order to avoid wasteful duplication and to improve the modularity
 of our data structures, we will merely use the BIDS dataset as an input,
 but we will *not* modify it in any way.
 
 > ## Task: Create a new DataLad dataset called `glm_analysis`
 >
-> Use the [datalad create] command, and subsequently change into the
-> root directory of the newly created dataset.
+> Use the [datalad create] command. Then change into the root directory of the
+> newly created dataset.
 >
 > > ## Solution
 > > ~~~
@@ -291,16 +291,16 @@ but we will *not* modify it in any way.
 >
 {: .challenge}
 
-Following the same logic and commands as previously, we add the raw BIDS
+Following the same logic and commands as before, we will add the raw BIDS
 dataset as a subdataset of the new analysis dataset to enable comprehensive
 tracking of all input data within the analysis dataset.
 
 > ## Task: Add BIDS data as a subdataset in `inputs/rawdata`
 >
 > Use the [datalad install] command. Make sure to identify the analysis dataset
-> as the dataset to operate on to get the BIDS dataset registered as a subdataset
-> (and not just as a standalone dataset). Use the [datalad subdatasets]
-> command to verify the result.
+> (the current directory) as the dataset to operate on in order to register the
+> BIDS dataset as a subdataset (and not just as a standalone dataset). Then, use
+> the [datalad subdatasets] command to verify the result.
 >
 > > ## Solution
 > > ~~~
@@ -312,17 +312,17 @@ tracking of all input data within the analysis dataset.
 >
 {: .challenge}
 
-Regarding the layout of this analysis dataset we cannot relying on automatic
-tools and a comprehensive standard yet (but such guidelines are actively being
-worked on). However, Datalad nevertheless aids efforts to bring order to the
-chaos. Anyone can develop their own ideas on how a dataset should be
-structured, and implement these concepts in *dataset procedures* that can be
+Regarding the layout of this analysis dataset, we unfortunately cannot yet rely
+on automatic tools and a comprehensive standard (but such guidelines are
+actively being worked on). However, DataLad nevertheless aids efforts to bring
+order to the chaos. Anyone can develop their own ideas on how a dataset should
+be structured, and implement these concepts in *dataset procedures* that can be
 executed using the [datalad run-procedure] command.
 
-Here we are going to adopt the YODA principles, a set of simple rules on how to
+Here we are going to adopt the YODA principles: a set of simple rules on how to
 structure analysis dataset. You can learn more about YODA at OHBM poster 2046
-(*YODA: YODA’s organigram on data analysis*), but here the only relevant aspect
-is that we want to keep all analysis scripts in the subdirectory `code/` of
+(*YODA: YODA’s organigram on data analysis*). But here, the only relevant aspect
+is that we want to keep all analysis scripts in the `code/` subdirectory of
 this dataset. We can get a readily configured dataset by running the YODA
 setup procedure:
 
@@ -339,16 +339,16 @@ setup procedure:
 >
 {: .challenge}
 
-Now we are almost ready to fire-up FSL for our GLM analysis. However, we need two
-pieces of custom code:
+Before we can fire up FSL for our GLM analysis, we need two pieces of custom
+code:
 
 1. a small script that can convert BIDS events.tsv files into the EV3 format that
    FSL can understand: available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh>
 
 2. an FSL analysis configuration template script available at: <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf>
 
-Any custom code needs to be tracked, if we want to achieve a complete record of
-how an analysis was conducted. Hence we have to store those scripts in our analysis
+Any custom code needs to be tracked if we want to achieve a complete record of
+how an analysis was conducted. Hence we will store those scripts in our analysis
 dataset.
 
 > ## Download the Scripts and Include Them in the Analysis Dataset
@@ -362,28 +362,28 @@ dataset.
 > > % datalad download-url --path code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
 > > % datalad download-url --path code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
 > > % git log
-> > 
+> >
 > > ~~~
 > > {: .bash}
 > {: .solution}
 >
 {: .challenge}
 
-At this point our analysis dataset contains all required inputs. We only have to
-run our custom code to produce the inputs in the format that FSL expects.
-First, let's convert the events.tsv file into EV3 format files.
+At this point, our analysis dataset contains all of the required inputs. We only
+have to run our custom code to produce the inputs in the format that FSL
+expects. First, let's convert the events.tsv file into EV3 format files.
 
 > ## Task: Run the converter script for the event timing information
 >
 > Use the [datalad run] command to execute the script at `code/events2ev3.sh`.
-> it requires the name of the output directory (use `sub-02`) and the location
-> of the BIDS events.tsv file to convert. Use the `--input` and `--output`
+> It requires the name of the output directory (use `sub-02`) and the location
+> of the BIDS events.tsv file to be converted. Use the `--input` and `--output`
 > options to let DataLad automatically manage these files for you.
 > **Important**: This BIDS subdataset does not actually have the content for the
 > events.tsv file yet. If you use `--input` correctly, DataLad will obtain the
 > file content for you automatically. Check the output carefully, the script is
-> written in a sloppy way that will produce some output even things go wrong.
-> Each generated file must have three numbers per line.
+> written in a sloppy way that will produce some output even when things go
+> wrong. Each generated file must have three numbers per line.
 >
 > > ## Solution
 > > ~~~
@@ -397,13 +397,12 @@ First, let's convert the events.tsv file into EV3 format files.
 >
 {: .challenge}
 
-And finally we only have left to configure the desired first-level GLM analysis
-with FSL. The following command will create a working configuration from the
-template we have stored in `code/`. It uses the mighty `sed` editor. That one is
-mind-boggling, but once you know how to use it, you never want to forget about
-it again. Let's also run that through [datalad run], so we know forever that we didn't
-type this in by hand, but actually generated it from a template (that we could
-alter and then regenerate this file).
+All we have left is to configure the desired first-level GLM analysis with FSL.
+The following command will create a working configuration from the template we
+stored in `code/`. It uses the arcane, yet powerful `sed` editor. We will again
+run use [datalad run] to invoke our command, so that we store in the history
+*how* this template was generated (so that we may audit, alter, or regenerate
+this file in the future — fearlessly).
 
 > ~~~
 > datalad run \
@@ -414,18 +413,15 @@ alter and then regenerate this file).
 > ~~~
 > {: .bash}
 
-Ready for FSL!
-
-But hold on. We cannot simply run FSL. If we were concerned that a simple DICOM
-converter can be buggy, we absolutely have to handle a software as complex as
-FSL with the same care. So let's add a container to this analysis dataset too.
-A ready-made container with FSL (~260 MB) is available from
+Now we're ready for FSL! And since FSL is certainly not a simple, system
+program, we will again use it in a container and add that container to this
+analysis dataset. A ready-made container with FSL (~260 MB) is available from
 shub://mih/ohbm2018-training:fsl
 
 > ## Task: Add a container with FSL
 >
 > Use the [datalad containers-add] command to add this container under the name
-> `fsl`, and the [datalad containers-list] command to verify that
+> `fsl`. Then use the [datalad containers-list] command to verify that
 > everything worked.
 >
 > > ## Solution
@@ -438,14 +434,14 @@ shub://mih/ohbm2018-training:fsl
 >
 {: .challenge}
 
-And finally, no but, no waiting: We can run FSL. The command is as short as
-`feat sub-02/1stlvl_design.fsf`. However, in order to achieve the most reproducible
-and most portable execution we should tell the [datalad containers-run] command
-what the inputs and outputs are. DataLad will then be able to obtain the required
-NIfTI time series file form the BIDS raw subdataset.
+The command we will run is a simple `feat sub-02/1stlvl_design.fsf`. However, in
+order to achieve the most reproducible and most portable execution we should
+tell the [datalad containers-run] command what the inputs and outputs are.
+DataLad will then be able to obtain the required NIfTI time series file from the
+BIDS raw subdataset.
 
-Please run the following command as soon as possible, it takes around 5min to
-complete on an average system.
+Please run the following command as soon as possible; it takes around 5 minutes
+to complete on an average system.
 
 > ~~~
 > datalad containers-run -m "sub-02 1st-level GLM" \
@@ -456,7 +452,7 @@ complete on an average system.
     feat {inputs[0]}
 > ~~~
 
-Once this command finished, DataLad will have captures the entire FSL output,
+Once this command finished, DataLad will have captured the entire FSL output,
 and the dataset will contain a complete record all the way from the input BIDS
 dataset to the GLM results (which, by the way, performed an FFA localization on
 a real BOLD imaging dataset, take a look!). The BIDS subdataset in turn has a
