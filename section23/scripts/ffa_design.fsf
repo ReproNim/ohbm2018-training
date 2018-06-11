@@ -702,4 +702,4 @@ set fmri(init_highres) ""
 set fmri(init_standard) ""
 
 # For full FEAT analysis: overwrite existing .feat output dir?
-set fmri(overwrite_yn) 0
+set fmri(overwrite_yn) 1
