@@ -255,14 +255,6 @@ That is why it is generally advisable to use `set -e` in scripts.  This
 instructs the shell to exit with a non-zero exit code right when some
 command fails.
 
-> ## Note on special commands
-> POSIX defines [some commands as "special"](https://www.gnu.org/software/bash/manual/html_node/Special-Builtins.html#Special-Builtins),
-> for which failure in execution would cause the entire script to exit (even
-> without set `-e`) if they return a non-zero value (`break`, `:`, `.`,
-> `continue`, `eval`, `exec`, `exit`, `export`, `readonly`, `return`,
-> `set`, `shift`, `trap`, `unset`).
-{: .callout}
-
 If you expect that some command might fail and it is OK, handle its
 failing execution explicitly, e.g. via
 
