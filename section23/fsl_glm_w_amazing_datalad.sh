@@ -5,9 +5,10 @@ set -e -u
 # remember the original directory, just to make some admin parts easier
 # but generally irrelevant
 srcdir=$(pwd)
-wdir=$(mktemp -d) 
+wdir=${1:-demo}
+mkdir -p ${wdir}
 cd ${wdir}
-echo "Workdir at ${wdir}/localizerdemo"
+echo "Workdir at `pwd`"
 
 # =========================
 # XXX actual demo from here
@@ -26,7 +27,8 @@ cd bids
 datalad install -d . -s https://github.com/datalad/example-dicom-functional.git inputs/rawdata
 
 # get a ready-made container with the dicom converter
-datalad containers-add heudiconv -u shub://ReproNim/ohbm2018-training:heudiconv
+datalad containers-add heudiconv -u shub://ReproNim/ohbm2018-training:heudiconvn \
+  --call-fmt 'singularity exec -B /tmp --bind {{pwd}} -H {{pwd}} {img} {cmd}'
 
 # with `datalad (containers-)run` we can capture basic provenance information on any
 # analysis step: what files where produced by which command, based on
@@ -69,8 +71,8 @@ datalad install -d . -s ../bids inputs/rawdata
 datalad run-procedure setup_yoda_dataset
 
 # inject external code, such that its location is tracked
-datalad download-url -O code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
-datalad download-url -O code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
+datalad download-url -O code/events2ev3.sh https://raw.githubusercontent.com/ReproNim/ohbm2018-training/master/section23/scripts/events2ev3.sh
+datalad download-url -O code/ffa_design.fsf https://raw.githubusercontent.com/ReproNim/ohbm2018-training/master/section23/scripts/ffa_design.fsf
 
 
 # here we convert BIDS events.tsv into a format accessible to FSL
@@ -88,7 +90,8 @@ datalad run \
 
 
 # use a pre-crafted container image for FSL
-datalad containers-add fsl -u shub://ReproNim/ohbm2018-training:fsl
+datalad containers-add fsl -u shub://ReproNim/ohbm2018-training:fsln \
+  --call-fmt 'singularity exec -B /tmp --bind {{pwd}} -H {{pwd}} {img} {cmd}'
 
 # execute GLM analysis, this will capture the entire FSL output with
 # datalad
