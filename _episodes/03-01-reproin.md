@@ -117,23 +117,19 @@ add as a *subdataset* to our BIDS dataset.
 >
 {: .challenge}
 
-At this point we are ready to convert our DICOMs. However, this is also a good
-moment to pause and remember that any software you are using has the potential
-to be broken (and probably actually is to some degree). DICOM conversion is the
-first transformation that is done to the raw data. If there is a problem with
-this step, it can affect all subsequent analysis steps and the final results.
-Hence we want to make extra sure that we know exactly what software we are using
-and that we can go back to it at a later stage, should we have the need to
-investigate an issue.
-
 ### Working With Containers
 
-Containerized computational environments are a great way to handle this situation.
-DataLad (via its [datalad-container] extension) provides support for managing
-and using such environments for data processing. This basic idea is to also add
-an image of a computational environment to a DataLad dataset (just like any other)
-file. This way we know exactly what we are using, and where to get it again
-in the future.
+Any software you are using (and at any step) has the potential to have
+bugs/errors/horrifying-gremlins — and arguably already does, you just may not
+know it yet. Hence we take extra care to know *exactly* what software we are
+using and that we can go back to it at a later stage, should we have the need to
+investigate an issue.
+
+Containerized computational environments are a great way to handle this problem.
+DataLad (via its [datalad-container] extension) provides support for using and
+managing such environments for data processing. We can add an image of a
+computational environment to a DataLad dataset (just like any other) file, so we
+know exactly what we are using and where to get it again in the future.
 
 A ready-made [singularity] container with the [HeuDiConv] DICOM converter
 (~160 MB) is available from [singularity-hub] at:
@@ -142,7 +138,7 @@ shub://mih/ohbm2018-training:heudiconv
 > ## Task: Add the HeuDiConv container to the dataset
 >
 > Use the [datalad containers-add] command to add this container under the name
-> `heudiconv`, and the [datalad containers-list] command to verify that
+> `heudiconv`. Then use the [datalad containers-list] command to verify that
 > everything worked.
 >
 > > ## Solution
@@ -155,19 +151,17 @@ shub://mih/ohbm2018-training:heudiconv
 >
 {: .challenge}
 
-We have now reached the point where our dataset trackes all input data, and
-the computational environment for the DICOM conversion. This means that we
-have a complete record of all components (so far) in this one dataset that
-we can reference via relative paths from the dataset root. This is a very good
-starting point for conducting a portable analysis.
+Our dataset now tracks all input data and the computational environment for the
+DICOM conversion. This means that we have a complete record of all components
+(thus far) in this one dataset that we can reference via relative paths from the
+dataset root. This is a good starting point for conducting a portable analysis.
 
-Datalad comes with two command to run arbitrary shell command and capture there
-output in a dataset. These command are [datalad run] and [datalad
-containers-run] \(provided by the [datalad-container] extension). Both commands
-are very similar, in fact there interface is almost identical. The big
+[datalad run] and [datalad containers-run] \(provided by the [datalad-container]
+extension) allow a user to run arbitrary shell commands and capture the output
+in a dataset. By design, both commands behave nearly identically. The primary
 difference is that [datalad run] executes commands in the local environment,
-[datalad containers-run] executes commands in a containerized computational
-environment. Therefore we are going to use the latter.
+whereas [datalad containers-run] executes commands inside of a containerized
+environment. Here, we will use the latter.
 
 > ## Task: Convert DICOM using HeuDiConv from the container
 >
@@ -178,13 +172,14 @@ environment. Therefore we are going to use the latter.
 >
 > It essentially tells it to use the [ReproIn heuristic] to convert the
 > DICOMs using the subject identifier `02`, with the DICOM converter
-> `dcm2niix` into the BIDS format. As the last and most important argument
-> the directory with the DICOMs is given.
+> `dcm2niix`, into the BIDS format. The last argument is the directory
+> containing the DICOMs.
 >
-> Run this command through [datalad containers-run], such that the results
-> of this command are saved using a meaningful commit message. If something
-> goes wrong, remember that you can `git reset --hard` the dataset repository
-> to throw away anything that wasn't committed yet.
+> Run this command using [datalad containers-run], making sure to include a
+> meaningful commit message, so that the results of this command are saved with
+> a meaningful context. If anything goes wrong when running the command,
+> remember that you can use `git reset --hard` on the dataset repository to
+> throw away anything that is not yet committed.
 >
 > Once done, use the [datalad diff] command to compare the dataset to the
 > previous saved state (`HEAD~1`) to get an instant summary of the changes.
@@ -200,36 +195,36 @@ environment. Therefore we are going to use the latter.
 > > ~~~
 > > {: .bash}
 > > It is not necessary to specify the name of the container to be used.
-> > If there is only one container known to a dataset [datalad containers-run]
+> > If there is only one container known to a dataset, [datalad containers-run]
 > > is clever enough to use that one.
 > {: .solution}
 >
 {: .challenge}
 
-You can now confirm that a NIfTI file has been added to the dataset, and its
+You can now confirm that a NIfTI file has been added to the dataset and that its
 name is compliant with the [BIDS] standard. Information such as the task-label
-has been extracted from the imaging sequence description automatically.
+has been automatically extracted from the imaging sequence description.
 
-There is only one very last thing missing before we can analyze our functional
+There is only one thing missing before we can analyze our functional
 imaging data: we need to know what stimulation was done at which point during
-the scan. Thanksfully the data was collected using an implementation that
-experted this information directly in the [BIDS] `events.tsv` format. The
-file already came with our DICOM dataset and can be found at
-`inputs/rawdata/events.tsv`. The only thing we need to do is to copy it at
-the right location under the BIDS-mandated name.
+the scan. Thankfully, the data was collected using an implementation that
+exported this information directly in the [BIDS] `events.tsv` format. The
+file came with our DICOM dataset and can be found at
+`inputs/rawdata/events.tsv`. All we need to do is copy it to the right location
+under the BIDS-mandated name.
 
-To do that, we could simple use the `cp` shell command. However, in the
-history of the dataset it would look like this file came out of nowhere.
-Again, we can use DataLad to capture this information. For such a simple
-thing like `cp` we do not need a container, so let's use [datalad run]
-directly.
+We can use `cp` to do this easily, but the copying step itself would not be
+entered into the dataset's history and thus the file would be added with no
+indication of where it came from. A good commit message can help with that, but
+what would be even better is to run `cp` using [datalad run] to capture this
+information.
 
 > ## Task: Copy the event.tsv file to its correct location via `run`
 >
-> BIDS requires to put this file at `sub-02/func/sub-02_task-oneback_run-01_events.tsv`.
-> Use the [datalad run] command to execute the shell `cp` command to
-> implement this step. This time, however, use the options `--input` and
-> `--output` to inform [datalad run] what files need tp be available,
+> BIDS requires that this file be located at `sub-02/func/sub-02_task-oneback_run-01_events.tsv`.
+> Use the [datalad run] command to execute the `cp` command to implement this
+> step. This time, however, use the options `--input` and
+> `--output` to inform [datalad run] what files need to be available
 > and what locations need to be writeable for this command.
 >
 > In order to avoid duplication, [datalad run] supports placeholder labels
@@ -248,22 +243,18 @@ directly.
 > >       cp {inputs} {outputs}
 > > ~~~
 > > {: .bash}
-> > It is not necessary to specify the name of the container to be used.
-> > If there is only one container known to a dataset [datalad containers-run]
-> > is clever enough to use that one.
 > {: .solution}
 >
 {: .challenge}
 
-And now we are ready with the data preparation. We have (the skeleton) of a
+We are now done with the data preparation. We have the skeleton of a
 BIDS-compliant dataset that contains all data in the right format and using the
-correct file names. In addition is also tracked the computational environment
-used to perform the DICOM conversion, and also tracks a separate dataset
-with the input DICOM data. This means we can trace every single file in this
-dataset back to its origin, including the commands and inputs used to create
-it.
+correct file names. In addition, the computational environment used to perform
+the DICOM conversion is tracked, as well as a separate dataset with the input
+DICOM data. This means we can trace every single file in this dataset back to
+its origin, including the commands and inputs used to create it.
 
-This dataset is now ready. It can be archived, and used as input for one or more
+This dataset is now ready. It can be archived and used as input for one or more
 analyses of any kind. Let's leave the dataset directory now:
 
 > ~~~
