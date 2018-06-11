@@ -29,7 +29,7 @@ For all steps of this study we will use [DataLad] to achieve these goals with re
 minimal effort
 
 
-> #### DataLad extensions
+> #### DataLad Extensions
 > 
 > [DataLad] itself is a data management package that is completely agnostic of
 > data formats and analysis procedures. However, DataLad functionality can be
@@ -40,7 +40,7 @@ minimal effort
 > {:callout}
 
 
-## Prepare data for analysis
+## Prepare the Data for Analysis
 
 In order to be able to analyze imaging data we typically have to convert them
 from their original DICOM format into NIfTI files. While there are many
@@ -80,7 +80,7 @@ we will change into this directory to be able to use relative paths.
 > ~~~
 > {: .bash}
 
-> #### Advantages of relative path specification
+> #### Advantages of Relative Path Specification
 > 
 > In many cases it doesn't matter whether one uses absolute or relative paths.
 > However, it matters a lot in terms of portability. Using relative paths makes
@@ -126,7 +126,7 @@ the final results. Hence we want to make extra sure that we know exactly what
 software we are using and that we can go back to it at a later stage, should we
 have the need to investigate and issue.
 
-### Working with containers
+### Working With Containers
 
 Containerized computational environments are a great way to handle this situation.
 DataLad (via its [datalad-container] extension) provides support for managing
@@ -271,7 +271,7 @@ analyses of any kind. Let's leave the dataset directory now:
 > ~~~
 > {: .bash}
 
-## A reproducible GLM demo analysis
+## A Reproducible GLM Demo Analysis
 
 With our raw data prepared in BIDS format, we can now conduct an analysis.
 We will implement a very basic first-level GLM analysis using FSL that runs
@@ -360,7 +360,7 @@ Any custom code needs to be tracked, if we want to achieve a complete record of
 how an analysis was conducted. Hence we have to store those scripts in our analysis
 dataset.
 
-> ## Download the scripts and include them in the analysis dataset
+> ## Download the Scripts and Include Them in the Analysis Dataset
 >
 > Use the [datalad download-url] command. Place the scripts in the `code/` directory
 > under their respective names. Check `git log` to confirm that the commit message
@@ -474,7 +474,7 @@ complete record of all processing down from the raw DICOMs onwards.
 TODO: rerun
 
 
-## Get ready for the afterlife
+## Get Ready for the Afterlife
 
 And because this record is complete, we can now simply throw away the input BIDS
 **subdataset** of our analysis.
