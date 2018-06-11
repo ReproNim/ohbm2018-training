@@ -400,7 +400,7 @@ expects. First, let's convert the events.tsv file into EV3 format files.
 All we have left is to configure the desired first-level GLM analysis with FSL.
 The following command will create a working configuration from the template we
 stored in `code/`. It uses the arcane, yet powerful `sed` editor. We will again
-run use [datalad run] to invoke our command, so that we store in the history
+use [datalad run] to invoke our command, so that we store in the history
 *how* this template was generated (so that we may audit, alter, or regenerate
 this file in the future — fearlessly).
 
