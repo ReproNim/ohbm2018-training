@@ -166,6 +166,35 @@ impact what external commands and libraries you are using.
 {: .challenge}
 
 
+## Command-line completion
+
+You can avoid typing full command names and paths by using your
+shell's completion capabilities.  The details and features of
+completion vary across shells, but most shells offer at least some
+form of completion.  The rest of this section will assume a bash
+shell.
+
+As an example, you could type `mkd` followed by <kbd>TAB</kbd>.  The
+text will be expanded to `mkdir` if that's the only command on `PATH`
+starting with those three letters.  If those letters don't uniquely
+identify a candidate, the text will be expanded to the unique stem,
+and you can hit <kbd>TAB</kbd> again to see the remaining choices.
+This isn't very useful for a five letter name, but it can save you
+from typing out unwieldy things like `gunzip
+sub-16_task-balloonanalogrisktask_run-03_bold.nii.gz`.
+
+> ## Advanced completion
+>
+> Some shells can complete more than just commands and paths, but they
+> may require additional configuration to do so.  With bash and a
+> Debian-based system, installing the `bash-completion` package will
+> add support for more advanced features, such as completing options
+> for some common commands (e.g. `mkdir --` then <kbd>TAB</kbd> will
+> display a list of `mkdir`'s long options).  And any program can
+> provide its own set bash-completion rules, which is especially
+> valuable for complex command-line interfaces like `git`.
+{: .callout}
+
 ## Shell history
 
 By default, a shell records the history of commands you have run.  You
