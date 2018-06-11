@@ -59,24 +59,25 @@ pipelines and tools.
 Our first goal is to convert our DICOM data into a DataLad dataset in BIDS
 format.
 
-> ## Task: Create a new DataLad dataset called `bids`
+> ## Task: Create a new DataLad dataset called `localizer_scans`
 >
 > Use the [datalad create] command
 >
 > > ## Solution
 > > ~~~
-> > % datalad create bids
+> > % datalad create localizer_scans
 > > ~~~
 > > {: .bash}
 > {: .solution}
 >
 {: .challenge}
 
-We now have the new dataset in the `bids/` directory. We will change into this
-directory so that all further commands will be able to use relative paths.
+We now have the new dataset in the `localizer_scans/` directory. We will change
+into this directory so that all further commands will be able to use relative
+paths.
 
 > ~~~
-> % cd bids
+> % cd localizer_scans
 > ~~~
 > {: .bash}
 
@@ -95,17 +96,17 @@ the dataset — and also code all scripts to use paths that are relative to this
 root directory. For this to work, a dataset must contain all of the inputs of a
 processing step (all code; all data).
 
-That means that we should add the raw DICOM files to our BIDS dataset. In our
-case, these DICOMs are already available in a DataLad dataset from
+That means that we should add the raw DICOM files to our dataset. In our case,
+these DICOMs are already available in a DataLad dataset from
 [GitHub](https://github.com/datalad/example-dicom-functional.git) that we can
-add as a *subdataset* to our BIDS dataset.
+add as a *subdataset* to our `localizer_scans` dataset.
 
 > ## Task: Add DICOM data as a subdataset in `inputs/rawdata`
 >
-> Use the [datalad install] command. Make sure to identify the `bids` dataset
-> (the current directory) as the dataset to operate on in order to register the
-> DICOMs as a subdataset (and not simply downloaded as a standalone dataset).
-> Then, use the [datalad subdatasets] command to verify the result.
+> Use the [datalad install] command. Make sure to identify the `localizer_scans`
+> dataset (the current directory) as the dataset to operate on in order to
+> register the DICOMs as a subdataset (and not simply downloaded as a standalone
+> dataset).  Then, use the [datalad subdatasets] command to verify the result.
 >
 > > ## Solution
 > > ~~~
@@ -267,14 +268,14 @@ analyses of any kind. Let's leave the dataset directory now:
 With our raw data prepared in BIDS format, we can now conduct an analysis.
 We will implement a very basic first-level GLM analysis using FSL that runs
 in just a few minutes. We will follow the same principles that we already
-applied when we prepared the BIDS dataset: the complete capture of all inputs,
-computational environments, code, and outputs.
+applied when we prepared the `localizer_scans` dataset: the complete capture of
+all inputs, computational environments, code, and outputs.
 
-Importantly, we will conduct our analysis in a new dataset. The raw BIDS
-dataset is suitable for many different analysis than can all use that dataset
-as input. In order to avoid wasteful duplication and to improve the modularity
-of our data structures, we will merely use the BIDS dataset as an input,
-but we will *not* modify it in any way.
+Importantly, we will conduct our analysis in a new dataset. The raw
+`localizer_scans` dataset is suitable for many different analysis than can all
+use that dataset as input. In order to avoid wasteful duplication and to improve
+the modularity of our data structures, we will merely use the `localizer_scans`
+dataset as an input, but we will *not* modify it in any way.
 
 > ## Task: Create a new DataLad dataset called `glm_analysis`
 >
@@ -291,20 +292,20 @@ but we will *not* modify it in any way.
 >
 {: .challenge}
 
-Following the same logic and commands as before, we will add the raw BIDS
-dataset as a subdataset of the new analysis dataset to enable comprehensive
-tracking of all input data within the analysis dataset.
+Following the same logic and commands as before, we will add the
+`localizer_scans` dataset as a subdataset of the new `glm_analysis` dataset to
+enable comprehensive tracking of all input data within the analysis dataset.
 
-> ## Task: Add BIDS data as a subdataset in `inputs/rawdata`
+> ## Task: Add `localizer_scans` data as a subdataset in `inputs/rawdata`
 >
 > Use the [datalad install] command. Make sure to identify the analysis dataset
 > (the current directory) as the dataset to operate on in order to register the
-> BIDS dataset as a subdataset (and not just as a standalone dataset). Then, use
-> the [datalad subdatasets] command to verify the result.
+> `localizer_scans` dataset as a subdataset (and not just as a standalone
+> dataset). Then, use the [datalad subdatasets] command to verify the result.
 >
 > > ## Solution
 > > ~~~
-> > % datalad install --dataset . --source ../bids inputs/rawdata
+> > % datalad install --dataset . --source ../localizer_scans inputs/rawdata
 > > % datalad subdatasets
 > > ~~~
 > > {: .bash}
@@ -379,7 +380,7 @@ expects. First, let's convert the events.tsv file into EV3 format files.
 > It requires the name of the output directory (use `sub-02`) and the location
 > of the BIDS events.tsv file to be converted. Use the `--input` and `--output`
 > options to let DataLad automatically manage these files for you.
-> **Important**: This BIDS subdataset does not actually have the content for the
+> **Important**: The subdataset does not actually have the content for the
 > events.tsv file yet. If you use `--input` correctly, DataLad will obtain the
 > file content for you automatically. Check the output carefully, the script is
 > written in a sloppy way that will produce some output even when things go
@@ -438,7 +439,7 @@ The command we will run is a simple `feat sub-02/1stlvl_design.fsf`. However, in
 order to achieve the most reproducible and most portable execution we should
 tell the [datalad containers-run] command what the inputs and outputs are.
 DataLad will then be able to obtain the required NIfTI time series file from the
-BIDS raw subdataset.
+`localizer_scans` raw subdataset.
 
 Please run the following command as soon as possible; it takes around 5 minutes
 to complete on an average system.
@@ -453,20 +454,21 @@ to complete on an average system.
 > ~~~
 
 Once this command finished, DataLad will have captured the entire FSL output,
-and the dataset will contain a complete record all the way from the input BIDS
-dataset to the GLM results (which, by the way, performed an FFA localization on
-a real BOLD imaging dataset, take a look!). The BIDS subdataset in turn has a
-complete record of all processing down from the raw DICOMs onwards.
+and the dataset will contain a complete record all the way from the input
+`localizer_scans` dataset to the GLM results (which, by the way, performed an
+FFA localization on a real BOLD imaging dataset, take a look!). The
+`localizer_scans` subdataset in turn has a complete record of all processing
+down from the raw DICOMs onwards.
 
 TODO: rerun
 
 
 ## Get Ready for the Afterlife
 
-And because this record is complete, we can now simply throw away the input BIDS
-**subdataset** of our analysis.
+And because this record is complete, we can now simply throw away the input
+`localizer_scans` **subdataset** of our analysis.
 
-> ## Task: Verify that the BIDS subdataset is unmodified and uninstall it
+> ## Task: Verify that the `localizer_scans` subdataset is unmodified and uninstall it
 >
 > Use the [datalad diff] command to check for modifications of the subdataset,
 > and the [datalad uninstall] do delete it.
