@@ -235,8 +235,9 @@ information.
 > command executions.
 >
 > > ## Solution
-> > It is sufficient to prefix the original command line call with
-> > `datalad containers-run -m "<some message>"`.
+> > Prefix the original command line call with 
+> > `datalad run -m "<some message>" --input <input file> --output <output file>` and 
+> > replace those files in the original command by `{inputs}` and `{outputs}` respectively.
 > > ~~~
 > > % datalad run -m "Import stimulation events" \
 > >       --input inputs/rawdata/events.tsv \
@@ -272,7 +273,7 @@ applied when we prepared the `localizer_scans` dataset: the complete capture of
 all inputs, computational environments, code, and outputs.
 
 Importantly, we will conduct our analysis in a new dataset. The raw
-`localizer_scans` dataset is suitable for many different analysis than can all
+`localizer_scans` dataset is suitable for many different analysis that can all
 use that dataset as input. In order to avoid wasteful duplication and to improve
 the modularity of our data structures, we will merely use the `localizer_scans`
 dataset as an input, but we will *not* modify it in any way.
