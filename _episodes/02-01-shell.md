@@ -191,7 +191,7 @@ sub-16_task-balloonanalogrisktask_run-03_bold.nii.gz`.
 > add support for more advanced features, such as completing options
 > for some common commands (e.g. `mkdir --` then <kbd>TAB</kbd> will
 > display a list of `mkdir`'s long options).  And any program can
-> provide its own set bash-completion rules, which is especially
+> provide its own set of bash-completion rules, which is especially
 > valuable for complex command-line interfaces like `git`.
 {: .callout}
 
