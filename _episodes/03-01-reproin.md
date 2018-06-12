@@ -513,6 +513,7 @@ TODO metadata
 [datalad siblings]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-siblings.html
 [datalad sshrun]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-sshrun.html
 [datalad subdatasets]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-subdatasets.html
+[datalad uninstall]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-uninstall.html
 [datalad update]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-update.html
 [datalad containers-add]: http://docs.datalad.org/projects/container/en/latest/generated/man/datalad-containers-add.html
 [datalad containers-list]: http://docs.datalad.org/projects/container/en/latest/generated/man/datalad-containers-list.html
