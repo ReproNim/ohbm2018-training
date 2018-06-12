@@ -361,8 +361,9 @@ dataset.
 >
 > > ## Solution
 > > ~~~
-> > % datalad download-url --path code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/events2ev3.sh
-> > % datalad download-url --path code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/ffa_design.fsf
+> > % datalad download-url --path code \
+> >   https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/events2ev3.sh \
+> >   https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/ffa_design.fsf
 > > % git log
 > >
 > > ~~~
