@@ -470,12 +470,14 @@ And because this record is complete, we can now simply throw away the input BIDS
 
 > ## Task: Verify that the BIDS subdataset is unmodified and uninstall it
 >
-> Use the [datalad diff] command to check for modifications of the subdataset,
-> and the [datalad uninstall] to delete it.
+> Use the [datalad diff] command and `git log` to verify that the subdataset is
+> in the same state as when it was initially added.  Then use [datalad
+> uninstall] to delete it.
 >
 > > ## Solution
 > > ~~~
-> > % datalad diff --revision HEAD~10 -- inputs
+> > % datalad diff -- inputs
+> > % git log -- inputs
 > > % datalad uninstall --dataset . inputs --recursive
 > > ~~~
 > > {: .bash}
