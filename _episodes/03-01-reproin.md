@@ -14,12 +14,12 @@ keypoints:
 In this lesson, we will carry out a full (although very basic) functional
 imaging study, going from raw data to complete data-analysis results.  We will
 start from imaging data in DICOM format — as if we had just finished scanning.
-Importantly, we will conduct this analysis so that it:
+Importantly, we will conduct this analysis so that it
 
 - leaves a comprehensive "paper trail" of all performed steps; everything
   will be tracked via version control
 
-- structures components in a way that facilitates re-use
+- structures components in a way that facilitates reuse
 
 - performs all critical computation in containerized computational environments
   for improved reproducibility and portability
@@ -93,7 +93,7 @@ directory so that all further commands will be able to use relative paths.
 When using DataLad, it is best to always run scripts from the root directory of
 the dataset — and also code all scripts to use paths that are relative to this
 root directory. For this to work, a dataset must contain all of the inputs of a
-processing step (all code; all data).
+processing step (all code, all data).
 
 That means that we should add the raw DICOM files to our BIDS dataset. In our
 case, these DICOMs are already available in a DataLad dataset from
@@ -242,6 +242,7 @@ information.
 > >       --input inputs/rawdata/events.tsv \
 > >       --output sub-02/func/sub-02_task-oneback_run-01_events.tsv \
 > >       cp {inputs} {outputs}
+> > % git log -p
 > > ~~~
 > > {: .bash}
 > {: .solution}
@@ -344,9 +345,9 @@ Before we can fire up FSL for our GLM analysis, we need two pieces of custom
 code:
 
 1. a small script that can convert BIDS events.tsv files into the EV3 format that
-   FSL can understand: available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/events2ev3.sh>
+   FSL can understand, available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/events2ev3.sh>
 
-2. an FSL analysis configuration template script available at: <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/ffa_design.fsf>
+2. an FSL analysis configuration template script available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/ffa_design.fsf>
 
 Any custom code needs to be tracked if we want to achieve a complete record of
 how an analysis was conducted. Hence we will store those scripts in our analysis
@@ -401,7 +402,7 @@ expects. First, let's convert the events.tsv file into EV3 format files.
 All we have left is to configure the desired first-level GLM analysis with FSL.
 The following command will create a working configuration from the template we
 stored in `code/`. It uses the arcane, yet powerful `sed` editor. We will again
-use [datalad run] to invoke our command, so that we store in the history
+use [datalad run] to invoke our command so that we store in the history
 *how* this template was generated (so that we may audit, alter, or regenerate
 this file in the future — fearlessly).
 
@@ -436,7 +437,7 @@ shub://mih/ohbm2018-training:fsl
 {: .challenge}
 
 The command we will run is a simple `feat sub-02/1stlvl_design.fsf`. However, in
-order to achieve the most reproducible and most portable execution we should
+order to achieve the most reproducible and most portable execution, we should
 tell the [datalad containers-run] command what the inputs and outputs are.
 DataLad will then be able to obtain the required NIfTI time series file from the
 BIDS raw subdataset.
