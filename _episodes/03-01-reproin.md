@@ -25,7 +25,7 @@ Importantly, we will conduct this analysis so that it:
   for improved reproducibility and portability
 
 For all steps of this study, we will use [DataLad] to achieve these goals with
-relatively minimal effort
+relatively minimal effort.
 
 
 > #### DataLad Extensions
@@ -231,7 +231,7 @@ information.
 > that you can use in the command specification itself.
 >
 > Use `git log` to investigate what information [DataLad] captured about this
-> command executions.
+> command's execution.
 >
 > > ## Solution
 > > Prefix the original command line call with 
@@ -317,7 +317,7 @@ Regarding the layout of this analysis dataset, we unfortunately cannot yet rely
 on automatic tools and a comprehensive standard (but such guidelines are
 actively being worked on). However, DataLad nevertheless aids efforts to bring
 order to the chaos. Anyone can develop their own ideas on how a dataset should
-be structured, and implement these concepts in *dataset procedures* that can be
+be structured and implement these concepts in *dataset procedures* that can be
 executed using the [datalad run-procedure] command.
 
 Here we are going to adopt the YODA principles: a set of simple rules on how to
@@ -453,7 +453,7 @@ to complete on an average system.
     feat {inputs[0]}
 > ~~~
 
-Once this command finished, DataLad will have captured the entire FSL output,
+Once this command finishes, DataLad will have captured the entire FSL output,
 and the dataset will contain a complete record all the way from the input BIDS
 dataset to the GLM results (which, by the way, performed an FFA localization on
 a real BOLD imaging dataset, take a look!). The BIDS subdataset in turn has a
@@ -470,7 +470,7 @@ And because this record is complete, we can now simply throw away the input BIDS
 > ## Task: Verify that the BIDS subdataset is unmodified and uninstall it
 >
 > Use the [datalad diff] command to check for modifications of the subdataset,
-> and the [datalad uninstall] do delete it.
+> and the [datalad uninstall] to delete it.
 >
 > > ## Solution
 > > ~~~
