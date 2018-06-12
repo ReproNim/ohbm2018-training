@@ -344,9 +344,9 @@ Before we can fire up FSL for our GLM analysis, we need two pieces of custom
 code:
 
 1. a small script that can convert BIDS events.tsv files into the EV3 format that
-   FSL can understand: available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh>
+   FSL can understand: available at <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/events2ev3.sh>
 
-2. an FSL analysis configuration template script available at: <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf>
+2. an FSL analysis configuration template script available at: <https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/ffa_design.fsf>
 
 Any custom code needs to be tracked if we want to achieve a complete record of
 how an analysis was conducted. Hence we will store those scripts in our analysis
@@ -360,8 +360,8 @@ dataset.
 >
 > > ## Solution
 > > ~~~
-> > % datalad download-url --path code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/events2ev3.sh
-> > % datalad download-url --path code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/scripts/ffa_design.fsf
+> > % datalad download-url --path code/events2ev3.sh https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/events2ev3.sh
+> > % datalad download-url --path code/ffa_design.fsf https://raw.githubusercontent.com/myyoda/ohbm2018-training/master/section23/scripts/ffa_design.fsf
 > > % git log
 > >
 > > ~~~
