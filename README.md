@@ -21,9 +21,13 @@
 ## Download and import the VM image file
 - Download from https://training.repronim.org/reprotraining.ova
 - To import the reprotraining.ova file:
-  1. select "File" -> "Import Appliance" from the VirtualBox menu.
-  2. Click through the import wizard dialog leaving the default settings.
-  3. See here for example step-by-step instructions [here](https://docs.oracle.com/cd/E26217_01/E26796/html/qs-import-vm.html)
+  1. Open VirtualBox on your computer
+  2. select "File" -> "Import Appliance" from the VirtualBox menu.
+  3. Click through the import wizard dialog leaving the default settings (see here for example step-by-step instructions [here](https://docs.oracle.com/cd/E26217_01/E26796/html/qs-import-vm.html)).
+
+## Starting the VM
+- Open VirtualBox on your computer
+- Choose "reprotraining" from the menu on the left and press "start" (the green arrow) to start the Ubuntu virtual machine.
   
 ## Issues: 
 - if you have a windows 10 pro 64 bit (eg Lenovo X1C) machine and get an error like: 
