@@ -238,6 +238,7 @@ information.
 > > Prefix the original command line call with 
 > > `datalad run -m "<some message>" --input <input file> --output <output file>` and 
 > > replace those files in the original command by `{inputs}` and `{outputs}` respectively.
+> > {% raw %}
 > > ~~~
 > > % datalad run -m "Import stimulation events" \
 > >       --input inputs/rawdata/events.tsv \
@@ -246,6 +247,7 @@ information.
 > > % git log -p
 > > ~~~
 > > {: .bash}
+> > {% endraw %}
 > {: .solution}
 >
 {: .challenge}
@@ -390,6 +392,7 @@ expects. First, let's convert the events.tsv file into EV3 format files.
 > wrong. Each generated file must have three numbers per line.
 >
 > > ## Solution
+> > {% raw %}
 > > ~~~
 > > % datalad run -m 'Build FSL EV3 design files' \
 > >       --input inputs/rawdata/sub-02/func/sub-02_task-oneback_run-01_events.tsv \
@@ -397,6 +400,7 @@ expects. First, let's convert the events.tsv file into EV3 format files.
 > >       bash code/events2ev3.sh sub-02 {inputs}
 > > ~~~
 > > {: .bash}
+> > {% endraw %}
 > {: .solution}
 >
 {: .challenge}
@@ -408,6 +412,7 @@ use [datalad run] to invoke our command so that we store in the history
 *how* this template was generated (so that we may audit, alter, or regenerate
 this file in the future — fearlessly).
 
+{% raw %}
 > ~~~
 > datalad run \
 >     -m "FSL FEAT analysis config script" \
@@ -416,6 +421,7 @@ this file in the future — fearlessly).
 >         code/ffa_design.fsf > {outputs}'
 > ~~~
 > {: .bash}
+{% endraw %}
 
 Now we're ready for FSL! And since FSL is certainly not a simple, system
 program, we will again use it in a container and add that container to this
@@ -447,6 +453,7 @@ DataLad will then be able to obtain the required NIfTI time series file from the
 Please run the following command as soon as possible; it takes around 5 minutes
 to complete on an average system.
 
+{% raw %}
 > ~~~
 > datalad containers-run -m "sub-02 1st-level GLM" \
     --input sub-02/1stlvl_design.fsf \
@@ -455,6 +462,7 @@ to complete on an average system.
     --output sub-02/1stlvl_glm.feat \
     feat {inputs[0]}
 > ~~~
+{% endraw %}
 
 Once this command finishes, DataLad will have captured the entire FSL output,
 and the dataset will contain a complete record all the way from the input BIDS
