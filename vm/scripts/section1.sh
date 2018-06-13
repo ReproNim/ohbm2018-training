@@ -23,3 +23,4 @@ cd ~/workspace/Indiv_Diffs_ReadingSkill
 cd ~
 git clone https://github.com/albertcrowley/nidm-training.git
 source $HOME/miniconda2/bin/deactivate
+rm ~/Downloads/Indiv*.tar
