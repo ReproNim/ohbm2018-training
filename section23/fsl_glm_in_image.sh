@@ -16,11 +16,11 @@ echo "Workdir at `pwd`"
 # -- part 1: DICOM conversion ---
 
 # we are creating a BIDS compatible variant of our MR dataset
-datalad create bids
+datalad create localizer_scans
 # running everything from the root of a dataset enables the consistent
 # use of relative paths in all analysis code and makes an analysis
 # implementation more portable
-cd bids
+cd localizer_scans
 
 # install input data as a subdataset, to enable identity tracking
 # an automated content retrieval, if necessary
@@ -65,7 +65,7 @@ datalad create glm_analysis
 cd glm_analysis
 
 # get the BIDS raw dataset (no actual content)
-datalad install -d . -s ../bids inputs/rawdata
+datalad install -d . -s ../localizer_scans inputs/rawdata
 
 # apply useful dataset preconfiguration
 datalad run-procedure setup_yoda_dataset
