@@ -61,7 +61,7 @@ purpose and command line options, which is available quickly in a shell:
 Typically such `--help` just causes them to print concise description
 of the entire program and list of (common) command line options it supports.
 
-> ## Task (warm up)
+> ## Excercise (warm up)
 > Run some sample command(s) you know (e.g. `bash`, `cat`), with `--help`,
 > e.g. `bash --help` .
 {: .challenge}
@@ -84,7 +84,7 @@ common are `more` and `less`.  Common shortcuts are
 - `q` - exit
 
 
-> ## Task: Navigate `man` for `git`
+> ## Excercise: Navigate `man` for `git`
 >
 > Question: What is the short description of `git` command?
 >
@@ -93,7 +93,7 @@ common are `more` and `less`.  Common shortcuts are
 `man -k` searches through all available manpages short descriptions and
 command names
 
-> ## Task: Find commands for work with "containers"
+> ## Excercise: Find commands for work with "containers"
 >
 > > ## Solution
 > > ~~~
@@ -129,7 +129,7 @@ impact what external commands and libraries you are using.
 
 #### PATH - determines full path to the command to be executed
 
-> ## Task: determine which program (full path to it) executes when you run `git`
+> ## Excercise: determine which program (full path to it) executes when you run `git`
 >
 > To see which command will actually be run when you intend to run a
 > `COMMAND`, use `which` command, e.g.

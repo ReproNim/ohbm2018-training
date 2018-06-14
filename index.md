@@ -5,9 +5,9 @@ layout: lesson
 These lectures and hands-on exercises are a part of the training curriculum from
 the OHBM 2018 training course ran by [ReproNim](http://www.reproducibleimaging.org)
 (Reproducible Neuroimaging) Center.  Selected materials are taylored for
-this course and covers only some sections within the full, but relatively short, event schedule.
+this course and cover only some sections within the full-day, but otherwise really compressed, event schedule.
 Please visit [ReproNim: Teach](http://www.reproducibleimaging.org) for
-more materials, which also will be referenced within specific lessons here.
+more materials, which we will also reference within specific lessons here.
 
 
 ### Introduction

@@ -523,7 +523,6 @@ TODO metadata
 [DataLad]: http://datalad.org
 [datalad-neuroimaging]: https://github.com/datalad/datalad-neuroimaging
 [datalad-container]: https://github.com/datalad/datalad-container
-[DataLad]: http://datalad.org
 [HeuDiConv]: http://github.com/nipy/heudiconv
 [BIDS]: http://bids.neuroimaging.io
 [singularity-hub]: https://singularity-hub.org/
