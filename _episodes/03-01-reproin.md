@@ -37,6 +37,10 @@ relatively minimal effort.
 >
 > {:callout}
 
+![ReproIn Convention](../fig/yoda-schemata-1.png)
+
+![ReproIn Convention](../fig/yoda-schemata-2.png)
+
 Our analysis will benefit from a standardization effort that was performed at
 the time of data acquisition. The metadata of the input DICOM images already
 contain all necessary information to identify the purpose of individual scans
