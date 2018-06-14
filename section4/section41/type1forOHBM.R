@@ -1,30 +1,21 @@
----
-title: "Basics, type 1 and power. OHBM 2018""
-author: "Celia Greenwood"
-date: "June 8, 2018"
-output: html_document
----
+#title: "Basics, type 1 and power. OHBM 2018""
+#author: "Celia Greenwood"
+#date: "June 8, 2018"
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ## Read in the datafile
-
-```{r}
 # this line needs correct location of dataset
 datain <- read.csv("../../data/phenotypes.aug.csv", header=TRUE, as.is=TRUE)
 
 
-```
 
 ## Explore
 
-Rename some variables for simplicity.  
+# Rename some variables for simplicity.  
 
-Look at a few histograms
+# Look at a few histograms
 
-```{r}
 
 par(mfrow = c(2,2), omi=rep(0,4), mar =  c(2,2,0.2,0.2), mgp = c(1,0,0))
 hist(datain$MRI_cort_vol.ctx.lh.parahippocampal)
@@ -41,18 +32,15 @@ MYSTERY <- datain$MYSTERY
 data.revised <- data.frame(MRI, MANUFACTURER, AGE, GENDER, MYSTERY, HAND)
 N <- nrow(data.revised)
 
-```
 
 ## Create a subsample and analyze it
 
-* Change N.small to different values.  
-* Compare results with your neighbour.
+#* Change N.small to different values.  
+#* Compare results with your neighbour.
 
-```{r}
 
 N.small <- 30
 
-#set.seed <  *****
   
 data.subsamp <- data.revised[sample(1:N, N.small),]
 fit.g <- lm(MRI ~ GENDER, data = data.subsamp)
@@ -61,13 +49,11 @@ fit.m <- lm(MRI ~ MYSTERY, data = data.subsamp)
 summary(fit.g)
 summary(fit.m)
 
-```
 
 ## Analyzing results for a series of subsamples
 
-(Make sure to complete the previous exercise first)
+#(Make sure to complete the previous exercise first)
 
-```{r}
 N.small <- 30
 N.subsamps <- 35
 
@@ -113,4 +99,3 @@ qq.volcano.function(30, 35, data.revised, "qq30","volcano30")
 qq.volcano.function(100, 35, data.revised, "qq100","volcano100")
 qq.volcano.function(250, 35, data.revised,"qq250","volcano250")
 
-```
