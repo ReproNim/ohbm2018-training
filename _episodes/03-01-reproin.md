@@ -27,7 +27,6 @@ Importantly, we will conduct this analysis so that it
 For all steps of this study, we will use [DataLad] to achieve these goals with
 relatively minimal effort.
 
-
 > #### DataLad Extensions
 >
 > [DataLad] itself is a data management package that is completely agnostic of
@@ -37,6 +36,16 @@ relatively minimal effort.
 > of two extension packages: [datalad-neuroimaging] and [datalad-container].
 >
 > {:callout}
+
+Our analysis will benefit from a standardization effort that was performed at
+the time of data acquisition. The metadata of the input DICOM images already
+contain all necessary information to identify the purpose of individual scans
+and encode essential properties into the filenames used in a BIDS-compliant
+dataset. The following figure illustrates how this critical information can be
+encoded into the acquisition protocol names at a scanner console when setting
+up a new study, by following the [ReproIn] naming conventions.
+
+[![ReproIn Convention](../fig/dbic-conversions.png)](https://github.com/repronim/reproin#overall-workflow)
 
 
 ## Prepare the Data for Analysis
@@ -53,8 +62,6 @@ effort of creating an ad-hoc directory structure. But more importantly, by
 structuring our data in a standard way (and an increasingly common one), it
 opens up possibilities for us to easily feed our dataset into existing analysis
 pipelines and tools.
-
-[![ReproIn Convention](../fig/dbic-conversions.png)](https://github.com/repronim/reproin#overall-workflow)
 
 Our first goal is to convert our DICOM data into a DataLad dataset in BIDS
 format.
