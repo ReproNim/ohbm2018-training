@@ -94,7 +94,7 @@ To enable NeuroDebian on your standard Debian or Ubuntu machine, you could
 `apt-get install neurodebian` (and follow the interactive dialogue) or just follow
 the instructions on http://neuro.debian.net .
 
-> ## Excercise: check NeuroDebian
+> ## Exercise: check NeuroDebian
 >
 > Check if  NeuroDebian is "enabled" in your VM Ubuntu installation
 > > ## Solution
@@ -114,10 +114,10 @@ the instructions on http://neuro.debian.net .
 > run `do-evil` as super user)
 {: .callout}
 
-> ## Excercise: Search and Install
+> ## Exercise: Search and Install
 >
 > Goal is to search for and install application(s) to visualize neuroimaging data
-> (using terminal for the purpose of the excercise, although there are good GUIs as well)
+> (using terminal for the purpose of the exercise, although there are good GUIs as well)
 >
 > > ## Question: What terms did you search for?
 > > ~~~
@@ -178,7 +178,7 @@ the instructions on http://neuro.debian.net .
 > {: .solution}
 {: .challenge}
 
-> ## Excercise: Multiple available versions
+> ## Exercise: Multiple available versions
 >
 > The goal of the exercise is to be able to install the desired version of a tool
 >
@@ -234,7 +234,7 @@ access to existing versions of content, but give you the "super-power" to establ
 new versions by changing or adding new content.  They also often facilitate sharing the derived
 works with a complete and annotated history of content changes.
 
-> ## Excercise -- What is Git?
+> ## Exercise -- What is Git?
 > > ## Consult `man git`
 > > ~~~
 > > % man git | grep -A1 '^NAME'
@@ -245,7 +245,7 @@ works with a complete and annotated history of content changes.
 > {: .solution}
 {: .challenge}
 
-> ## Excercise -- tell Git about yourself!
+> ## Exercise -- tell Git about yourself!
 > Since [Git] makes a record of changes, please configure git to know your name and email
 > (you could as well use fake email, just better be consistent to simplify attribution)
 > ~~~
@@ -266,7 +266,7 @@ works with a complete and annotated history of content changes.
 > Similarly `--help` is available for `datalad COMMAND`s.
 {: .challenge}
 
-> ## Excercise -- `install` AKA `clone`
+> ## Exercise -- `install` AKA `clone`
 > Clone [https://github.com/repronim/ohbm-training]() locally
 > > ## Solution
 > > I am sorry if you had to look in here ;-)
@@ -288,7 +288,7 @@ works with a complete and annotated history of content changes.
 > [git clone] brings you the most recent content available in the "default branch"
 > of the repository.  So what "version" of content did we get?
 > > ## Solution(s)
-> > Version should be something which uniquely and unambigously describes
+> > Version should be something which uniquely and unambiguously describes
 > > content.  In Git it would be the SHA1 checksum of the commit you got
 > > ~~~
 > > % git show | HEAD
@@ -302,7 +302,7 @@ works with a complete and annotated history of content changes.
 > > But SHA1 is not "ordered", i.e. from observing one SHA1 you cannot tell
 > > if it comes later or earlier in development of the content.
 > > [git tag](https://git-scm.com/docs/git-tag) allow to "tag" specific content
-> > versions with miningful and/or comparable version strings.  Run `git tag` to
+> > versions with meaningful and/or comparable version strings.  Run `git tag` to
 > > see available tags, and then use `git describe` to give unique but also
 > > ordered version of the content
 > > ~~~
@@ -333,7 +333,7 @@ works with a complete and annotated history of content changes.
     references (tags, branches, etc) and the content they point to
     between clones of the repository
 
-> ## Excercise: Time travel through the full history of changes.
+> ## Exercise: Time travel through the full history of changes.
 >
 >  - Using `apt` install `gitk`
 >  - Run `gitk --all`
@@ -390,7 +390,7 @@ git-annex flexibility to reference content from the web,
 [datalad.datalad.org] provides hundreds of datasets (git/git-annex
 repositories) which provide access to over 12TB of neuroscience data
 from different projects (such as openfmri.org, crcns.org etc).  And because
-all content is unambigously versioned by [git] and [git-annex] there is
+all content is unambiguously versioned by [git] and [git-annex] there is
 a guarantee that the content for the same version would be the same across
 all clones of the dataset, regardless where content was obtained from.
 
