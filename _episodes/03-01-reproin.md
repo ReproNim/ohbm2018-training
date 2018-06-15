@@ -7,7 +7,15 @@ questions:
 objectives:
 - "Conduct portable and reproducible analyses with ReproIn and DataLad from the ground up."
 keypoints:
-- "TODO"
+- we can implement a complete imaging study using DataLad datasets to represent
+  units of data processing
+- each unit comprehensively capture all inputs and data processing leading up to
+  it
+- this comprehensive capture facilitates re-use of units, and enables computational
+  reproducibility
+- carefully validated intermediate results (captured as a DataLad dataset) are
+  a candidate for publication with minimal additional effort
+- the outcome of this demo is available as a DataLad dataset from [GitHub](https://github.com/myyoda/demo-dataset-glmanalysis)
 ---
 ## Introduction
 
@@ -24,8 +32,9 @@ Importantly, we will conduct this analysis so that it
 - performs all critical computation in containerized computational environments
   for improved reproducibility and portability
 
-For all steps of this study, we will use [DataLad] to achieve these goals with
-relatively minimal effort.
+The following sections highlight a few core concepts that are instrumental for
+achieving these goals. For all steps of this study, we will use [DataLad] to
+achieve these goals with relatively minimal effort.
 
 > #### DataLad Extensions
 >
@@ -37,9 +46,84 @@ relatively minimal effort.
 >
 > {:callout}
 
+### Joint Management of Data, Code, and Computional Environments
+
+Comprehensive computational reproducibility of study results requires full
+capture of *all* analysis steps in a machine-executable form. This means that
+for each and every output file we must know precisely from which inputs a
+particular output was generated, and by which implementation of an algorithm.
+Therefore we must capture not just the precise version of any input data file,
+but additionally any custom code and software environment involved in a
+computation.
+
+DataLad is capable of providing this comprehensive capture by being able to
+track source code in the same manner as (large) data files. Text files with
+code are managed directly with [Git], while data file tracking and transport is
+performed by [Git annex]. This includes image files of containerized
+computational environments with all software needed to perform the desired
+computations. Via the mechanism of a [Git submodule] DataLad can connect two or
+more datasets.  This connection enables lightweight version tracking of the
+entire content of a *sub*-dataset, without duplicating information or storage
+demands.  Moreover, DataLad can transparently obtain subdataset content without
+requiring a user to maintain a copy of the directory structure of a subdataset.
+
 ![ReproIn Convention](../fig/yoda-schemata-1.png)
 
+The figure above shows a schematic depiction of this comprehensive tracking.
+The dataset on the right tracks the state of three other dataset with input
+data. From those DataLad can automatically obtain any required input files for
+a computation which is implemented in code that is also tracked in this
+dataset. This code is executed by DataLad in a computational environment that
+is also tracked in the same dataset in the form of a container image file. From
+this comprehensive set of inputs the outputs are computed, and are also
+captured by DataLad in the same dataset.
+
+In this lesson we will create two such datasets that represent two major
+components of any imaging study: 1) data conversion from raw DICOM format, and
+2) data analysis for answering a specific research question. While the involved
+data files, code, computational environments will differ between these steps,
+the overall principle of comprehensive input and output capture is a common
+aspects shared between the two.
+
+### Modular Study Components
+
+Imaging studies tend to involve rather complex, multi-step analyses. It is
+common that a single dataset is analyzed in multiple ways that in turn require
+different types of preprocessing. Accurate presentation of methods and results
+in a publication a precise understanding what exactly was done to which variant
+of data to produce a particular result. However, it can be very challenging to
+maintain this kind of awareness, especially in long-running projects that
+involve multiple researchers or even groups with non-overlapping
+responsibilities.
+
+With DataLad's dataset-subdataset linkage it is fairly straightforward to
+structure data processing in a study in modular units that enable standalone
+publication of intermediate steps and effortless re-use of (carefully
+validated) computational results.
+
 ![ReproIn Convention](../fig/yoda-schemata-2.png)
+
+The above figure depicts a typical structure of data processing in an imaging
+study, going from acquired raw data, to a converted and standardized form, to
+preprocessed data, to one or more analysis implementations, to the respective
+publications. Key aspect here is that each of these steps is represented by a
+DataLad dataset that comprehensively tracks all inputs and outputs of a given
+step using the features described in the previous section. Each dataset can in
+turn be input to one or more additional data processing steps. While a single
+dataset only tracks its immediate inputs, DataLad is capable of resolving any
+input dependencies recursively across all subdataset levels (subdatasets of
+subdatasets of ...). This makes it possible to discover the precise identity of
+data, code, and computational environments for *any* underlying computation --
+even years after a study was completed (given that each involved dataset was
+archived). Each modular component only has to be archived once, because it
+captures all states of its own evolution.
+
+The two datasets created in this lesson represent two of those modular
+components: 1) imaging data in a standardized (BIDS) format, and 2) the outputs
+of an analysis (that includes a preprocessing step), where the second component
+is built atop the first component using its outputs as inputs for an analysis.
+
+### Facilitate Data Structure Standardization
 
 Our analysis will benefit from a standardization effort that was performed at
 the time of data acquisition. The metadata of the input DICOM images already
@@ -552,3 +636,7 @@ TODO metadata
 [BIDS]: http://bids.neuroimaging.io
 [singularity-hub]: https://singularity-hub.org/
 [singularity]: http://singularity.lbl.gov/
+
+[Git submodule]: https://git-scm.com/docs/git-submodule
+[Git]: https://git-scm.com
+[Git annex]: https://git-annex.branchable.com/
