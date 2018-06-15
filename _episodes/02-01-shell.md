@@ -116,8 +116,8 @@ one](https://scotch.io/tutorials/getting-started-with-vim-an-interactive-guide))
 Here we will just teach you how to exit Vi/Vim if you end up in this
 unknown territory:
 
-- <kbd>ESC</kbd> <kbd>Shift-z</kbd> <kbd>Shift-q</kbd> to quick without saving
-- <kbd>ESC</kbd> <kbd>Shift-z</kbd> <kbd>Shift-z</kbd> to quick saving changes.
+- <kbd>ESC</kbd> <kbd>Shift-z</kbd> <kbd>Shift-q</kbd> to quit without saving
+- <kbd>ESC</kbd> <kbd>Shift-z</kbd> <kbd>Shift-z</kbd> to quit saving changes.
 
 ## Some important environment variables and commands
 
