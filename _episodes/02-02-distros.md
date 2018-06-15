@@ -17,9 +17,10 @@ keypoints:
 
 The title for this section brings together a wide range of technologies which
 are at first glance completely independent:  GNU/Linux
-distributions---such as Debian--- which provide computing environments,
-and version control systems---such as Git---which originate in
+distributions---such as [Debian]---which provide computing environments,
+and version control systems([VCS])---such as [Git]---which originate in
 software development.  But both
+distributions and version control systems have a feature in common: they
 distributions and version control systems have a feature in common: they
 provide means to obtain, or in other words to `install`, and to manage content
 locally. Moreover, installed content components typically carry unambiguous
@@ -65,7 +66,7 @@ endeavour including many scientific applications.  Any number of those packages 
 installed via a unified interface of the APT package manager and with clear information
 about versioning, licensing, etc.  Interestingly, almost all Debian packages now
 are  themselves guaranteed to be reproducible
-(see [Debian: Reproducible Builds](https://wiki.debian.org/ReproducibleBuilds).
+(see [Debian: Reproducible Builds](https://wiki.debian.org/ReproducibleBuilds)).
 
 Because of such variety, wide range of support hardware, acknowledged stability,
 adherence to principles of open and free software, Debian is a very popular
@@ -399,20 +400,86 @@ for more information) to facilitate efficient and reproducible computation.
 With DataLad you can not only gain access to the data resources and maintain
 your computational scripts under version control system, you can maintain
 the full record  of the computation you performed in your study.  Let's
-conclude this section with minimalistic neuroimaging study while recording
-the full history of changes.
+conclude this section with just a very minimalistic neuroimaging study we
+perform while recording the full history of changes.  Two sections ahead
+we will will go through a more complete example.
 
-> ## Step 1: Create a new dataset
-> Use [datalad create] command to create a new dataset "mystudy"
+> ## Exercise: Install a dataset
+> Use [datalad install] command to install a sample dataset from
+> http://datasets.datalad.org/?dir=/openfmri/ds000114 :
 > > ## Solution
 > > ~~~
-> > % datalad create mystudy
-> > ...
-> > % cd mystudy
+> > % datalad install ///openfmri/ds000114
 > > ~~~
 > > {: .bash}
 > {: .solution}
 {: .challenge}
+
+> ## Exercise: Explore its history
+> Q1: What is its current version?
+>
+> Q2: Did 1.0.0 version of the dataset follow BIDS?
+>
+> Q3: What is the difference between 2.0.0 and 2.0.0+1 versions?
+>
+> Task:  Assuming that the dataset is also compliant with the released
+> BIDS specification 1.0.2, fix BIDSversion field in `dataset_description.json`
+> and [datalad save] the change with descriptive message
+> > ## Solution
+> > ~~~
+> > % sed -i -e 's,1.0.0rc2,1.0.2,g'  dataset_description.json
+> > % datalad save -m "Boosted BIDSVersion to 1.0.2 (no changes to dataset were needed)"
+> > ~~~
+> > {: .bash}
+> {: .solution}
+{: .challenge}
+
+> ## Exercise: Explore and obtain a data file
+> Q: Look at `sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz`.
+> What is it? Does it have content?
+>
+> > ## Task: Ask `git annex` about where is the content available from
+> > ~~~
+> > % git annex whereis sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz
+> > whereis sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz (5 copies)
+> >   	00000000-0000-0000-0000-000000000001 -- web
+> >    	0cacbc02-5b4b-48f6-89da-10a75d3bba1a -- vagrant@nitrcce:~/ds000114 [here]
+> >    	135caf6c-5166-45e8-8d46-4ff5e08985b3 -- datalad
+> >    	30a3fc48-d8bf-4c77-9b0b-975a9008b2bb -- yoh@smaug:/mnt/btrfs/datasets/datalad/crawl/openfmri/ds000114
+> >    	b2096681-bbfc-4e3a-a832-30d7bbf373a0 -- [datalad-archives]
+> >
+> >   web: http://openneuro.s3.amazonaws.com/ds000114/ds000114_R2.0.0/uncompressed/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz?versionId=zkpz5g077RXeD86qPj7kiQMpr5UjldwG
+> >   web: http://openneuro.s3.amazonaws.com/ds000114/ds000114_R2.0.1/uncompressed/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz?versionId=twjb5fU.KJINYUnt9x5_YGRMfYzw133I
+> >   web: http://openneuro.s3.amazonaws.com/ds000114/ds000114_unrevisioned/uncompressed/sub001/anatomy/highres001.nii.gz?versionId=DpHsiEVsigDTuVOHJjQDB1yxzXvhkFYJ
+> >
+> >   datalad-archives: dl+archive:MD5E-s4665038365--fa2bbc92e47d15ce399e1a6722834f68.tgz#path=ds114_R2.0.0/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz&size=8677710
+> >   datalad-archives: dl+archive:MD5E-s4665193070--e3f00f47b231bde13fe6f2ee8f4c864d.zip#path=ds000114_R2.0.1/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz&size=8677710
+> >   datalad-archives: dl+archive:MD5E-s4930156456--bf97c46872ce26f7e3f1e6c0a91bf252.tgz/ds114/sub001/anatomy/highres001.nii.gz#size=8677710
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+> > ## Task: Ask `datalad` (or `git-annex` directly) to obtain this file
+> > E.g. use [datalad get] command to obtain the content from one of those locations.
+> {: .solution}
+{: .challenge}
+
+> ## Exercise: Perform basic analysis and make a `run` record
+> Use `nib-ls` from [nibabel](http://nipy.org/nibabel/) to get and store
+> basic statistic on the file we just obtained in an `INFO.txt` file
+> in the top directory of the dataset.
+> When figured out the command to run, use [datalad run] to actually
+> run it so it makes a record for generated `INFO.txt` file.
+> > ## Solution
+> > ~~~
+> > % datalad run 'nib-ls  -s sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz > INFO.txt'
+> > ~~~
+> > {: .bash}
+> Use `git log INFO.txt` to see the generated commit record.
+> {: .solution}
+{: .challenge}
+
+
 
 [DataLad]: http://datalad.org
 [Debian]: http://debian.org
@@ -430,6 +497,7 @@ the full history of changes.
 [git push]: https://git-scm.com/docs/git-push
 [git pull]: https://git-scm.com/docs/git-pull
 [git fetch]: https://git-scm.com/docs/git-fetch
+[git checkout]: https://git-scm.com/docs/git-checkout
 [git clone]: https://git-scm.com/docs/git-clone
 [git status]: https://git-scm.com/docs/git-status
 
