@@ -9,14 +9,46 @@ objectives:
 keypoints:
 - we can implement a complete imaging study using DataLad datasets to represent
   units of data processing
-- each unit comprehensively capture all inputs and data processing leading up to
+- each unit comprehensively captures all inputs and data processing leading up to
   it
 - this comprehensive capture facilitates re-use of units, and enables computational
   reproducibility
 - carefully validated intermediate results (captured as a DataLad dataset) are
   a candidate for publication with minimal additional effort
-- the outcome of this demo is available as a DataLad dataset from [GitHub](https://github.com/myyoda/demo-dataset-glmanalysis)
+- the outcome of this demo is available as a demo DataLad dataset from [GitHub](https://github.com/myyoda/demo-dataset-glmanalysis)
 ---
+
+> #### Training instructions
+>
+> This lesson needs the `section2` software environment. With the following code
+> we activate it, and create a directory for this lesson:
+> 
+> > ~~~
+> > % cd ~
+> > % source activate section2
+> > % mkdir lesson-03-01
+> > % cd lesson-03-01
+> > ~~~
+> > {: .bash}
+>
+> There is a lot of material in this section, more than you will be able to
+> go through in the available time. However, this level of detail should
+> help to be able to go back to the lesson and explore everything a bit more.
+> The two main sections of this lesson "Prepare the Data for Analysis" and
+> "A Reproducible GLM Demo Analysis" are conceptually very similar. Both
+> set up a dataset with all inputs of a data processing step, and then execute
+> this step in a containerized computational environment. The differences
+> between the sections reflect the inherent complexity of a real analysis.
+> **If you are short on time**, focus on the section "Prepare the Data for Analysis"
+> that demonstrates the essential idea of a complete input/output capture.
+> Then skip through "A Reproducible GLM Demo Analysis" running just the code
+> snippets (including those in the task solutions). The actual analysis run
+> at the end of the section will take about 5 min that you can use to go back
+> and look at the previous steps in more detail.
+> {:callout}
+
+
+
 ## Introduction
 
 In this lesson, we will carry out a full (although very basic) functional
@@ -135,7 +167,6 @@ up a new study, by following the [ReproIn] naming conventions.
 
 [![ReproIn Convention](../fig/dbic-conversions.png)](https://github.com/repronim/reproin#overall-workflow)
 
-
 ## Prepare the Data for Analysis
 
 Before analyzing imaging data, we typically have to convert them from their
@@ -229,7 +260,8 @@ know exactly what we are using and where to get it again in the future.
 
 A ready-made [singularity] container with the [HeuDiConv] DICOM converter
 (~160 MB) is available from [singularity-hub] at:
-shub://mih/ohbm2018-training:heudiconv
+shub://ReproNim/ohbm2018-training:heudiconvn (a local copy is available at
+`~/images/heudiconv.simg` in the training VM).
 
 > ## Task: Add the HeuDiConv container to the dataset
 >
@@ -239,7 +271,11 @@ shub://mih/ohbm2018-training:heudiconv
 >
 > > ## Solution
 > > ~~~
-> > % datalad containers-add heudiconv --url shub://mih/ohbm2018-training:heudiconv
+> > % # regular call
+> > % # datalad containers-add heudiconv --url shub://ReproNim/ohbm2018-training:heudiconvn
+> > % # BUT in the training VM do this to save on downloads
+> > % datalad containers-add heudiconv --url ~/images/heudiconv.simg \
+> >       --call-fmt 'singularity exec {img} {cmd}'
 > > % datalad containers-list
 > > ~~~
 > > {: .bash}
@@ -282,15 +318,16 @@ environment. Here, we will use the latter.
 >
 > > ## Solution
 > > It is sufficient to prefix the original command line call with
-> > `datalad containers-run -m "<some message>"`.
+> > `datalad containers-run`.
 > > ~~~
 > > % datalad containers-run -m "Convert sub-02 DICOMs into BIDS" \
+> >       --container-name heudiconv \
 > >       heudiconv -f reproin -s 02 -c dcm2niix -b -l "" --minmeta -a . \
 > >       -o /tmp/heudiconv.sub-02 --files inputs/rawdata/dicoms
 > > % datalad diff --revision HEAD~1
 > > ~~~
 > > {: .bash}
-> > It is not necessary to specify the name of the container to be used.
+> > It is not strictly necessary to specify the name of the container to be used.
 > > If there is only one container known to a dataset, [datalad containers-run]
 > > is clever enough to use that one.
 > {: .solution}
@@ -500,6 +537,44 @@ expects. First, let's convert the events.tsv file into EV3 format files.
 >
 {: .challenge}
 
+Now we're ready for FSL! And since FSL is certainly not a simple, system
+program, we will again use it in a container and add that container to this
+analysis dataset. A ready-made container with FSL (~260 MB) is available from
+shub://ReproNim/ohbm2018-training:fsln (a local copy is available at
+`~/images/fsl.simg` in the training VM).
+
+> ## Task: Add a container with FSL
+>
+> Use the [datalad containers-add] command to add this container under the name
+> `fsl`. Then use the [datalad containers-list] command to verify that
+> everything worked.
+>
+> > ## Solution
+> > ~~~
+> > % # regular call
+> > % datalad containers-add fsl --url shub://ReproNim/ohbm2018-training:fsln
+> > % # BUT in the training VM do this to save on downloads
+> > % datalad containers-add fsl --url ~/images/fsl.simg \
+> >       --call-fmt 'singularity exec {img} {cmd}'
+> > %
+> > % datalad containers-list
+> > ~~~
+> > {: .bash}
+> {: .solution}
+>
+{: .challenge}
+
+With this we have completed the analysis setup. At such a milestone it can be
+useful to label the state of a dataset that can be referred to later on. Let's
+add the label `ready4analysis` here.
+
+{% raw %}
+> ~~~
+> % datalad save --version-tag ready4analysis
+> ~~~
+> {: .bash}
+{% endraw %}
+
 All we have left is to configure the desired first-level GLM analysis with FSL.
 The following command will create a working configuration from the template we
 stored in `code/`. It uses the arcane, yet powerful `sed` editor. We will again
@@ -518,45 +593,26 @@ this file in the future — fearlessly).
 > {: .bash}
 {% endraw %}
 
-Now we're ready for FSL! And since FSL is certainly not a simple, system
-program, we will again use it in a container and add that container to this
-analysis dataset. A ready-made container with FSL (~260 MB) is available from
-shub://mih/ohbm2018-training:fsl
-
-> ## Task: Add a container with FSL
->
-> Use the [datalad containers-add] command to add this container under the name
-> `fsl`. Then use the [datalad containers-list] command to verify that
-> everything worked.
->
-> > ## Solution
-> > ~~~
-> > % datalad containers-add fsl --url shub://mih/ohbm2018-training:fsl
-> > % datalad containers-list
-> > ~~~
-> > {: .bash}
-> {: .solution}
->
-{: .challenge}
-
-The command we will run is a simple `feat sub-02/1stlvl_design.fsf`. However, in
-order to achieve the most reproducible and most portable execution, we should
-tell the [datalad containers-run] command what the inputs and outputs are.
-DataLad will then be able to obtain the required NIfTI time series file from the
-`localizer_scans` raw subdataset.
+The command that we will run now in order to compute the analysis results is a
+simple `feat sub-02/1stlvl_design.fsf`. However, in order to achieve the most
+reproducible and most portable execution, we should tell the [datalad
+containers-run] command what the inputs and outputs are.  DataLad will then be
+able to obtain the required NIfTI time series file from the `localizer_scans`
+raw subdataset.
 
 Please run the following command as soon as possible; it takes around 5 minutes
 to complete on an average system.
 
 {% raw %}
 > ~~~
-> datalad containers-run -m "sub-02 1st-level GLM" \
+> datalad containers-run --container-name fsl -m "sub-02 1st-level GLM" \
     --input sub-02/1stlvl_design.fsf \
     --input sub-02/onsets \
     --input inputs/rawdata/sub-02/func/sub-02_task-oneback_run-01_bold.nii.gz \
     --output sub-02/1stlvl_glm.feat \
     feat {inputs[0]}
 > ~~~
+> {: .bash}
 {% endraw %}
 
 Once this command finishes, DataLad will have captured the entire FSL output,
@@ -565,13 +621,18 @@ dataset to the GLM results (which, by the way, performed an FFA localization on
 a real BOLD imaging dataset, take a look!). The BIDS subdataset in turn has a
 complete record of all processing down from the raw DICOMs onwards.
 
-TODO: rerun
-
 
 ## Get Ready for the Afterlife
 
-And because this record is complete, we can now simply throw away the input
-`localizer_scans` **subdataset** of our analysis.
+Once a study is complete and published it is important to archive data and
+results, for example, to be able to respond to inquiries from readers of an
+associated publication. The modularity of the study units makes this
+straightforward and avoid needless duplication. We now that the raw data for
+this GLM analysis is tracked in its own dataset (`localizer_scans`) that only
+needs to be archived once, regardless of how many analyses use it as input.
+This means that we can "throw away" this subdataset copy *within* this
+analysis dataset. DataLad can re-obtain the correct version at any point in
+the future, as long as the recorded location remains accessible.
 
 > ## Task: Verify that the `localizer_scans` subdataset is unmodified and uninstall it
 >
@@ -590,7 +651,31 @@ And because this record is complete, we can now simply throw away the input
 >
 {: .challenge}
 
-TODO metadata
+Before we archive these analysis results, we can go one step further and verify
+their computational reproducibility. DataLad provides a `rerun` command the is
+capable of "replaying" any recorded command. The following command we
+re-execute the FSL analysis (the command that was recorded since we tagged the
+dataset as "ready4analysis"). It will record the recomputed results in a
+separate Git branch named "verify" of the dataset. We can then automatically
+compare these new results to the original ones in the "master" branch. We
+will see that all outputs can be reproduced in bit-identical form. The only
+changes are observed in log files that contain volatile information, such
+as time steps.
+
+> {% raw %}
+> ~~~
+> # rerun FSL analysis from scratch (~5 min)
+> % datalad rerun --branch verify --onto ready4analysis --since ready4analysis
+> % # check that we are now on the new `verify` branch
+> % git branch
+> % # compare which files have changes with respect to the original results
+> % git diff master --stat
+> % # switch back to the master branch and remove the `verify` branch
+> % git checkout master
+> % git branch -D verify
+> ~~~
+> {: .bash}
+> {% endraw %}
 
 [datalad add-sibling]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-add-sibling.html
 [datalad add]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-add.html
