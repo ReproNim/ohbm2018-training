@@ -652,7 +652,7 @@ the future, as long as the recorded location remains accessible.
 {: .challenge}
 
 Before we archive these analysis results, we can go one step further and verify
-their computational reproducibility. DataLad provides a `rerun` command the is
+their computational reproducibility. DataLad provides a `rerun` command that is
 capable of "replaying" any recorded command. The following command we
 re-execute the FSL analysis (the command that was recorded since we tagged the
 dataset as "ready4analysis"). It will record the recomputed results in a
