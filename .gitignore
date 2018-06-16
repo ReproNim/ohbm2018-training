@@ -1,1 +1,7 @@
 *.swp
+*~
+.DS_Store
+.idea
+.sass-cache
+_site
+__pycache__
