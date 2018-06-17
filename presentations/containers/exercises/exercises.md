@@ -183,7 +183,7 @@ layout: false
 
 - running command within the container
 ```bash
-docker run image bet
+docker run my_fsl bet
 ```
 --
 
@@ -204,7 +204,7 @@ cd ..
 
 - mounting a local directory with data and running *bet* on the downloaded file: 
 ```bash
-docker run -v ~/data/ds000114:/data image bet \
+docker run -v ~/data/ds000114:/data my_fsl bet \
 /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz sub-01_output
 ```
 --
@@ -227,7 +227,7 @@ mkdir output
 
 - mounting local directories with data and output, and running *bet* on the downloaded file:
 ```bash
-docker run -v ~/data/ds000114:/data -v ~/output:/output image bet \
+docker run -v ~/data/ds000114:/data -v ~/output:/output my_fsl bet \
 /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz /output/sub-01_output
 ```
 --
@@ -265,7 +265,7 @@ layout: false
 
 - running an interactive session:
 ```bash
-docker run -it image
+docker run -it my_fsl
 ```
 --
 
