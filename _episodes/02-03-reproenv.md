@@ -9,5 +9,5 @@ questions:
 
 Hand over the stage to Dorota and Satra.
 
-- [Presentation](/presentations/containers/presentation/)
-- [Excercises](/presentations/containers/exercises/)
+- [Presentation](../presentations/containers/presentation/)
+- [Excercises](../presentations/containers/exercises/)
