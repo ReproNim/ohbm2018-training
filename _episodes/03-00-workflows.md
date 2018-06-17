@@ -1,5 +1,5 @@
 ---
-title: "</a><b>Neuroimaging Workflows</b><a>"
+title: "Neuroimaging Workflows"
 teaching: 10
 exercises: 20
 questions:
