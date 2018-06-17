@@ -1,7 +1,7 @@
 ---
 title: "Challenges with large numbers of tests"
 author: "Celia Greenwood"
-date: "April 23, 2018"
+date: "June 12, 2018"
 output: html_document
 ---
 
@@ -17,8 +17,6 @@ This code will allow you to generate test statistics under various assumptions, 
 
 
 ```{r}
-#setwd("C:/Users/celia.greenwood/My Documents/GitHub/MultTesting/")
-setwd("C:/CeliaFiles/Teaching/OHBM2018/ModuleMultTesting/")
 library(mvtnorm)
 library(ggplot2)
 
@@ -33,7 +31,10 @@ z.sd.H0 <- 1       # standard deviation for null tests
 z.mean.HA <- 0.5   # mean for tests following HA
 z.sd.HA <- 1.0     # standard deviation for tests following HA
 
+set.seed(97531)
 ```
+
+This function creates a QQ plot.  Although there are R functions that do this, it is easy to write one.
 
 ```{r, echo = FALSE}
 
