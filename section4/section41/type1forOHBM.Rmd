@@ -12,9 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Read in the datafile
 
 ```{r}
-# this line needs to be replaced with correct location of dataset
-#setwd("C:/CeliaFiles/Teaching/OHBM2018/Dataset")
-datain <- read.csv("../data/phenotypes.aug.csv", header=TRUE, as.is=TRUE)
+# this line needs correct location of dataset
+datain <- read.csv("../../data/phenotypes.aug.csv", header=TRUE, as.is=TRUE)
 
 
 ```
