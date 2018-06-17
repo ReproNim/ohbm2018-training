@@ -98,18 +98,23 @@ layout: false
 
 - Containers:
   - isolate and encapsulate the environments
-  - there are many ready to use existing environments
+  - there are many ready to use existing environments (check [Docker Hub](https://hub.docker.com/))
 
 ---
 
 ### <span style="color:purple">What does it mean to work in a container</span>
+
+
 If you are running a container on your laptop
+&nbsp;
+
 - it uses the same hardware
+
 - but user spaces and libraries are independent
 
 --
 
-<img src="img/docker1in.jpeg" width="30%" />
+<img src="img/docker1in.jpeg" width="20%" />
 
 
 <img src="img/docker2in.jpeg" width="50%" />
@@ -117,9 +122,14 @@ If you are running a container on your laptop
 ---
 ### <span style="color:purple">What does it mean to work in a container</span>
 
+
 If you are running a container on your laptop
+&nbsp;
+
 - it uses the same hardware
+
 - but user spaces and libraries are independent
+
 - you can create additional bindings between these two environments
 
 <img src="img/docker3in.jpeg" width="70%" />
@@ -167,7 +177,6 @@ layout: false
 
  **Virtual Machines**
   - emulate whole computer system (software+hardware)
-  - run on top of a physical machine using a *hypervisor*
   - use *hypervisor* to share and manage hardware of the host, and execute the guest operating system
   - guest machines are completely isolated and have dedicated resources
 ---
