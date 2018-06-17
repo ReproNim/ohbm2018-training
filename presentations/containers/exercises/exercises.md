@@ -7,7 +7,7 @@ class: center, middle, inverse
 ---
 layout: false
 
-- #### Exercise 1: Creating a Docker image with FSL
+- #### Exercise 1: Creating Docker images with FSL and Python
 - #### Exercise 2: Running *bet* within the container
 
 ---
@@ -31,7 +31,7 @@ layout: false
 
 ---
 layout: false
-  - a more complicate Dockerfile with FSL and python might look like this 
+  - a more complicated Dockerfile with FSL might look like this 
 
   ```bash
   FROM neurodebian:stretch-non-free
@@ -75,14 +75,16 @@ layout: false
 ### Neurodocker - generate custom images
 
 &nbsp;
+- generates custom  Dockerfiles and Singularity files for neuroimaging software and minifies existing Docker images
 
-  - It supports Docker and Singularity.	
+- simplifies writing a new Dockerfile and Singularity files
 
-  - It supports many packages used in neuroimiging,  including FSL, AFNI, ANTs, FreeSurfer, SPM12,  Python.
+- incorporates the best practice for installing software
 
-  - It can minimize existing containers.
+- supports popular neuroimaging software: AFNI, ANTs, Convert3D, dcm2niix, FreeSurfer, FSL, MINC, Miniconda (Python), MRtrix3, PETPVC, SPM, NeuroDebian
 
-&nbsp;
+- uses ReproZip for minifying existing Docker images
+
 &nbsp;
 
   - Creating a Dockerfile that includes FSL from Neurodebian:
@@ -151,6 +153,19 @@ name: inverse
 layout: true
 class: center, middle, inverse
 ---
+### Exercise 1a: Adding python 3.6 to the Docker FSL image
+---
+layout: false
+
+Add python 3.6 to your previous image. 
+
+Use [the Neurodocker examples page](https://github.com/kaczmarj/neurodocker/tree/master/examples) for help. Search for `miniconda` software.
+
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+---
 ## Exercise 2: Running *bet* within the container
 ---
 layout: false
@@ -180,13 +195,17 @@ layout: false
 
 - installing a datalad repository and downloading one T1w file
 ```bash
+mkdir data
+cd data
 datalad install -r ///workshops/nih-2017/ds000114
 datalad get ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz
+cd ..
 ```
 
 - mounting a local directory with data and running *bet* on the downloaded file: 
 ```bash
-docker run -v ~/ds000114:/data image bet /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz sub-01_output
+docker run -v ~/data/ds000114:/data image bet \
+/data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz sub-01_output
 ```
 --
 - checking the output
@@ -208,7 +227,8 @@ mkdir output
 
 - mounting local directories with data and output, and running *bet* on the downloaded file:
 ```bash
-docker run -v ~/ds000114:/data -v ~/output:/output image bet /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz /output/sub-01_output
+docker run -v ~/data/ds000114:/data -v ~/output:/output image bet \
+/data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz /output/sub-01_output
 ```
 --
 - checking the output
@@ -228,7 +248,9 @@ layout: false
 
 - home directory is automatically mounted, so we don't have to specify (`-B` can be used to add more mounting points) 
 ```bash
-singularity run fsl.simg bet ~/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz ~/output/sub-01_output_sing
+singularity run images/fsl.simg bet \
+~/data/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz \
+~/output/sub-01_output_sing
 ```
 
 - checking the output
