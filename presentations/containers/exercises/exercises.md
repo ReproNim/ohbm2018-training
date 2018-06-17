@@ -204,7 +204,7 @@ cd ..
 
 - mounting a local directory with data and running *bet* on the downloaded file: 
 ```bash
-docker run -v ~/data/ds000114:/data my_fsl bet \
+docker run -v ~/ds000114:/data my_fsl bet \
 /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz sub-01_output
 ```
 --
@@ -227,7 +227,7 @@ mkdir output
 
 - mounting local directories with data and output, and running *bet* on the downloaded file:
 ```bash
-docker run -v ~/data/ds000114:/data -v ~/output:/output my_fsl bet \
+docker run -v ~/ds000114:/data -v ~/output:/output my_fsl bet \
 /data/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz /output/sub-01_output
 ```
 --
@@ -249,7 +249,7 @@ layout: false
 - home directory is automatically mounted, so we don't have to specify (`-B` can be used to add more mounting points) 
 ```bash
 singularity run images/fsl.simg bet \
-~/data/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz \
+~/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz \
 ~/output/sub-01_output_sing
 ```
 
