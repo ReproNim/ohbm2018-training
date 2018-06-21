@@ -35,7 +35,7 @@
 - if you are unable to install VirtualBox due to virtualization technology (VT-x) not being enabled on your system, [look here](https://docs-old.fedoraproject.org/en-US/Fedora/13/html/Virtualization_Guide/sect-Virtualization-Troubleshooting-Enabling_Intel_VT_and_AMD_V_virtualization_hardware_extensions_in_BIOS.html)
 
 # The Presentations
-## Introduction
+## Introduction - David Kennedy (UMass Medical) and JB Poline (McGill)
 [Link](https://github.com/ReproNim/ohbm2018-training/blob/master/Introduction/HandsOn_Motivation.pdf)
 
 ## FAIR Data - BIDS datasets  - Jeffrey Grethe, UCSD
