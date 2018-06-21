@@ -33,3 +33,17 @@
 - if you have a windows 10 pro 64 bit (eg Lenovo X1C) machine and get an error like: 
   vt-x/amd-v hardware acceleration is not available on your system, [look here](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v#enable-the-hyper-v-role-through-settings)
 - if you are unable to install VirtualBox due to virtualization technology (VT-x) not being enabled on your system, [look here](https://docs-old.fedoraproject.org/en-US/Fedora/13/html/Virtualization_Guide/sect-Virtualization-Troubleshooting-Enabling_Intel_VT_and_AMD_V_virtualization_hardware_extensions_in_BIOS.html)
+
+# The Presentations
+## Introduction
+
+## FAIR Data - BIDS datasets  - Jeffrey Grethe, UCSD
+[Link](https://github.com/ReproNim/ohbm2018-training/blob/master/section1/OHBM_FAIR_Training_Corrected.pdf).
+
+## Computational basis  - Yaroslav Halchenko, Dartmouth College and Michael Hanke, Magdeburg
+
+## Neuroimaging Workflows - Dorota Jarecka and Satrajit Ghosh, MIT
+
+## Statistics for reproducibility  - Celia Greenwood and Jean-Baptiste Poline, McGill
+- Basics [Link](https://github.com/ReproNim/ohbm2018-training/blob/master/section4/section41/basics2.pdf)
+- Positive Predictive Value (PPV) [Link](https://github.com/ReproNim/ohbm2018-training/blob/master/section4/section42/Positive-Predictive-Value.ipynb)
