@@ -36,6 +36,7 @@
 
 # The Presentations
 ## Introduction
+[Link](https://github.com/ReproNim/ohbm2018-training/blob/master/Introduction/HandsOn_Motivation.pdf)
 
 ## FAIR Data - BIDS datasets  - Jeffrey Grethe, UCSD
 [Link](https://github.com/ReproNim/ohbm2018-training/blob/master/section1/OHBM_FAIR_Training_Corrected.pdf).
