@@ -44,6 +44,7 @@
 ## Computational basis  - Yaroslav Halchenko, Dartmouth College and Michael Hanke, Magdeburg
 
 ## Neuroimaging Workflows - Dorota Jarecka and Satrajit Ghosh, MIT
+- Containers [Link](http://www.reproducibleimaging.org/ohbm2018-training/presentations/containers/exercises/#1)
 
 ## Statistics for reproducibility  - Celia Greenwood and Jean-Baptiste Poline, McGill
 - Basics [Link](https://github.com/ReproNim/ohbm2018-training/blob/master/section4/section41/basics2.pdf)
