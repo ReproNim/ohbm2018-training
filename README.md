@@ -42,6 +42,11 @@
 [Link](https://github.com/ReproNim/ohbm2018-training/blob/master/section1/OHBM_FAIR_Training_Corrected.pdf).
 
 ## Computational basis  - Yaroslav Halchenko, Dartmouth College and Michael Hanke, Magdeburg
+Words... 
+[Words](url)
+
+### tesrt
+[mystery link](google.com)
 
 ## Neuroimaging Workflows - Dorota Jarecka and Satrajit Ghosh, MIT
 - Containers [Link](http://www.reproducibleimaging.org/ohbm2018-training/presentations/containers/exercises/#1)
