@@ -17,10 +17,10 @@ cd PyNIDM
 pip install -e .
 mkdir ~/workspace
 cd ~/workspace
-tar -xvf ~/Downloads/Indiv*.tar
+tar -xvf ~/Indiv_Diffs_ReadingSkill.tar
 cd ~/workspace/Indiv_Diffs_ReadingSkill
 ~/PyNIDM/bin/BIDSMRI2NIDM.py -d ~/workspace/Indiv_Diffs_ReadingSkill
 cd ~
 git clone https://github.com/albertcrowley/nidm-training.git
 source $HOME/miniconda2/bin/deactivate
-rm ~/Downloads/Indiv*.tar
+rm ~/Indiv_Diffs_ReadingSkill.tar

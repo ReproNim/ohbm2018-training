@@ -3,7 +3,7 @@
     {
       "type": "virtualbox-ovf",
       "format": "ova",
-      "vm_name": "repronim-training",
+      "vm_name": "minimized",
       "output_directory": "output",
       "source_path": "ubuntu-xenial-desktop.ova",
       "ssh_timeout": "60m",
@@ -14,6 +14,27 @@
         ["modifyvm", "{{.Name}}", "--memory", "2048"],
         ["modifyvm", "{{.Name}}", "--cpus", "2"]
       ]
+    },
+    {
+      "type": "amazon-ebs",
+      "ami_name": "OHBM 2018 Training",
+      "source_ami": "ami-a4dc46db",
+      "access_key": "{{user `AWS_ACCESS_KEY`}}",
+      "secret_key": "{{user `AWS_SECRET_KEY`}}",
+      "ssh_username": "ubuntu",
+      "region": "us-east-1",
+      "instance_type": "t2.medium",
+      "vpc_id": "vpc-5d2dd63a",
+      "subnet_id": "subnet-de244bf4",
+      "tags": {
+          "Name": "OHBM 2018 Training"
+      },
+      "launch_block_device_mappings": [{
+          "device_name": "/dev/sda1",
+          "volume_size": 50,
+          "volume_type": "gp2",
+          "delete_on_termination": true
+      }]
     }
   ],
 
@@ -26,7 +47,12 @@
     {
       "type": "file",
       "source": "files/Indiv_Diffs_ReadingSkill.tar",
-      "destination": "~/Downloads/Indiv_Diffs_ReadingSkill.tar"
+      "destination": "~/Indiv_Diffs_ReadingSkill.tar"
+    },
+    {
+      "type": "file",
+      "source": "files/aws/nitrcce-config.tar.gz",
+      "destination": "~/nitrcce-config.tar.gz"
     },
     {
       "type": "shell",
@@ -37,11 +63,12 @@
         "scripts/docker.sh",
         "scripts/singularity.sh",
         "scripts/miniconda.sh",
+        "scripts/aws.sh",
         "scripts/section1.sh",
         "scripts/section2.sh",
         "scripts/section3.sh",
         "scripts/section4.sh",
-        "scripts/cleanup.sh"
+        "scripts/minimize.sh"
       ]
     },
     {
@@ -49,5 +76,10 @@
       "source": "files/neurodocker.sh",
       "destination": "~/images/neurodocker.sh"
     }
-  ]
+  ],
+
+  "variables": {
+    "AWS_ACCESS_KEY": "ENTER_AWS_ACCESS_KEY_HERE",
+    "AWS_SECRET_KEY": "ENTER_AWS_SECRET_KEY_HERE"
+  }
 }

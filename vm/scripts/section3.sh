@@ -58,4 +58,4 @@ sudo docker run --rm kaczmarj/neurodocker:master generate docker  \
   --add-to-entrypoint "source /etc/fsl/5.0/fsl.sh" > Dockerfile.fsl
 sudo docker build -t fsl:latest -f Dockerfile.fsl .
 
-sudo chown -R vagrant.vagrant $HOME/images
+sudo chown -R $USER.$USER $HOME/images
