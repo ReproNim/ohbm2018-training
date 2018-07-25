@@ -3,7 +3,7 @@
     {
       "type": "virtualbox-ovf",
       "format": "ova",
-      "vm_name": "minimized",
+      "vm_name": "reprotraining",
       "output_directory": "output",
       "source_path": "ubuntu-xenial-desktop.ova",
       "ssh_timeout": "60m",
