@@ -19,8 +19,9 @@ if [ "$PACKER_BUILDER_TYPE" == "amazon-ebs" ]; then
   # Install config files for ubuntu account
   cd ~
   tar xvfz nitrcce-config.tar.gz
-  rm nitrcce-config.tar.gz
 
   # Install startup script to run at system start
   sudo sed -i -e 's/exit 0/\/home\/ubuntu\/.config\/nitrcce\/guacamole\/startup.sh; exit 0/g' /etc/rc.local
 fi
+
+rm nitrcce-config.tar.gz
