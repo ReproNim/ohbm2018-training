@@ -540,7 +540,7 @@ expects. First, let's convert the events.tsv file into EV3 format files.
 Now we're ready for FSL! And since FSL is certainly not a simple, system
 program, we will again use it in a container and add that container to this
 analysis dataset. A ready-made container with FSL (~260 MB) is available from
-shub://ReproNim/ohbm2018-training:fsln (a local copy is available at
+shub://ReproNim/ohbm2018-training:fsl (a local copy is available at
 `~/images/fsl.simg` in the training VM).
 
 > ## Task: Add a container with FSL
@@ -552,7 +552,7 @@ shub://ReproNim/ohbm2018-training:fsln (a local copy is available at
 > > ## Solution
 > > ~~~
 > > % # regular call
-> > % datalad containers-add fsl --url shub://ReproNim/ohbm2018-training:fsln
+> > % datalad containers-add fsl --url shub://ReproNim/ohbm2018-training:fsl
 > > % # BUT in the training VM do this to save on downloads
 > > % datalad containers-add fsl --url ~/images/fsl.simg \
 > >       --call-fmt 'singularity exec {img} {cmd}'
