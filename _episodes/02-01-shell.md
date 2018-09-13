@@ -6,6 +6,9 @@ questions:
 - "Why and how does using the command line/shell efficiently increase reproducibility of neuroimaging studies?"
 - "How can we assure that our scripts *do the right thing*?"
 objectives:
+- "Provide hints on efficient use of the collected shell history of commands"
+- "Explain how to make shell scripts more robust and less dangerous"
+keypoints: 
 - "A command line shell is a powerful tool and learning additional
  'tricks' can help make its use more efficient, less error-prone, and
  thus more reproducible"
