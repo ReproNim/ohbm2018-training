@@ -104,6 +104,8 @@ the instructions on http://neuro.debian.net .
 > > ~~~
 > > {: .bash}
 > {: .solution}
+For those using older VM images for Neurodebian, you might have to use `apt-cache policy` 
+instead of `apt policy`  
 {: .challenge}
 
 > ### Note: "God" privileges needed
@@ -301,8 +303,9 @@ works with a complete and annotated history of content changes.
 > > {: .bash}
 > > But SHA1 is not "ordered", i.e. from observing one SHA1 you cannot tell
 > > if it comes later or earlier in development of the content.
-> > [git tag](https://git-scm.com/docs/git-tag) allow to "tag" specific content
-> > versions with meaningful and/or comparable version strings.  Run `git tag` to
+> > [git tag](https://git-scm.com/docs/git-tag) allows one to "tag" specific content
+> > versions with meaningful and/or comparable version strings, enabling the process of
+> > benchmarking progress in a project. Run `git tag` to
 > > see available tags, and then use `git describe` to give unique but also
 > > ordered version of the content
 > > ~~~
@@ -331,7 +334,9 @@ works with a complete and annotated history of content changes.
     of your current "version" of the repository
   - commands such as [git push], [git fetch], [git pull], etc exchange
     references (tags, branches, etc) and the content they point to
-    between clones of the repository
+    between clones of the repository. Useful rule of thumb: [git pull] = [git fetch] + [git merge]
+    Before [GitHub], [git fetch] was the only way to check differences
+    between local and remote version of a repository.
 
 > ## Exercise: Time travel through the full history of changes.
 >
@@ -497,9 +502,11 @@ we will will go through a more complete example.
 [git push]: https://git-scm.com/docs/git-push
 [git pull]: https://git-scm.com/docs/git-pull
 [git fetch]: https://git-scm.com/docs/git-fetch
+[git merge]: https://git-scm.com/docs/git-merge
 [git checkout]: https://git-scm.com/docs/git-checkout
 [git clone]: https://git-scm.com/docs/git-clone
 [git status]: https://git-scm.com/docs/git-status
+[GitHub]: https://github.com
 
 [datalad add-sibling]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-add-sibling.html
 [datalad add]: http://datalad.readthedocs.io/en/latest/generated/man/datalad-add.html
