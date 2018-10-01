@@ -73,7 +73,7 @@ not the majority) of the available commands.  Manpages often provide a
 very detailed description and consist of many pages of textual
 documentation.  It gets presented to you in a `pager`---a basic command
 for viewing and navigation of the text file. The `pager` to be used is specified
-as an environment variable, two common examples of which are
+as an environment variable, `$PAGER`, two common examples of which are
 `more` and `less`.  Some useful `less` shortcuts include
 
 - <kbd>h</kbd> - help
@@ -167,8 +167,8 @@ by `:`
 > {: .bash}
 >
 > `which -a` is a neat way to see all the versions of a 
-> package you across paths in the environment, listed
-> in the order of path specified.
+> package you have available across paths in the environment, listed
+> in the order of paths specified in $PATH environment variable.
 >  
 > Do not mix up `which` with `locate`, which (if available) would just
 > find a file with that word somewhere in the file name/path.
