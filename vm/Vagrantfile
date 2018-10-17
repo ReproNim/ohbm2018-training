@@ -1,0 +1,65 @@
+# Repronim OHBM 2018 Training environment manager
+#
+# This Vagrantfile can be used to spin up an AWS EC2 image containing the
+# training material.
+#
+# Quick Start
+# -----------
+# 1) Download vagrant and install it in a directory in your env PATH (e.g. /usr/bin):
+#         https://www.vagrantup.com/downloads.html
+# 2) Edit the configuration parameters below specific to your AWS subscription
+# 3) Create a local working directory containing this Vagrantfile and any
+#    files you'd like uploaded to the EC2 instance. All the files and directories
+#    in your working directory will be copied into a /vagrant directory on
+#    the EC2 instance.
+# 4) Install the vagrant AWS plugin: vagrant plugin install vagrant-aws
+# 5) Start your EC2 instance: vagrant up --provider=aws
+#
+# Useful vagrant commands
+# -----------------------
+# To SSH into your EC2 instance: vagrant ssh
+# To get the status of your EC2 instance: vagrant status
+# To stop and delete your EC2 instance: vagrant destroy
+# To discover the hostname of you EC2 instance: vagrant ssh-config
+#
+# Guacamole Desktop
+# -----------------
+# The EC2 instance comes configured with an Ubuntu Desktop accessible through
+# the VNC client, Guacamole. To use:
+# 1) Get the hostname of your EC2 instance by running the command:
+#           vagrant ssh-config
+#    Your hostname will look something like "ec2-18-206-190-110.compute-1.amazonaws.com"
+# 2) Open a browser and navigate to the URL:
+#           http://your-ec2-hostname-from-step-1:8080/guacamole
+# 3) At the Guacamole login screen, enter these credentials:
+#           username: ubuntu
+#           password: ohbm2018
+# Issue: If the desktop screen is very small and appears at the bottom of
+#        the browser window, refreshing the browser page will resize the
+#        desktop image to the proper width and height.
+#
+###############################################################################
+
+Vagrant.configure("2") do |config|
+
+  require 'vagrant-aws'
+  config.vm.box = "NITRC/aws"
+  config.vm.box_version = "1.0.0"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id = 'YOUR KEY ID'
+    aws.secret_access_key = 'YOUR SECRET KEY'
+    aws.keypair_name = 'YOUR KEYPAIR NAME'
+    override.ssh.private_key_path = '~/.ssh/id_rsa'
+    aws.security_groups = ['YOUR SECURITY GROUP'] # Your security group must have ports 22 and 8080 open
+    aws.instance_type = 't2.medium'
+    aws.region = 'us-east-1'
+    aws.ami = 'ami-8787caf8' # OHBM 2018 Training AMI
+    override.ssh.username = 'ubuntu'
+    aws.tags = {
+      'Name' => 'OHBM Repronim Training'
+    }
+  end
+
+end

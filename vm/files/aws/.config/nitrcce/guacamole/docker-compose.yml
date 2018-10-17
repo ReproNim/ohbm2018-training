@@ -1,0 +1,35 @@
+version: '3'
+services:
+  # www:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-www
+  #   container_name: nitrcce-www
+  #   image: nitrcce-www
+  #   ports:
+  #     - 80:80
+  guac-mysql:
+    container_name: guac-mysql
+    image: mysql:5
+    environment:
+      - MYSQL_ROOT_PASSWORD=ENTER_PASSWORD_HERE
+      - MYSQL_DATABASE=guacamole_db
+      - MYSQL_USER=guacamole_user
+      - MYSQL_PASSWORD=ENTER_PASSWORD_HERE
+    volumes:
+      - /home/ubuntu/.config/nitrcce/guacamole/sql:/docker-entrypoint-initdb.d
+  guacd:
+    container_name: guacd
+    image: guacamole/guacd
+  guacamole:
+    container_name: guacamole
+    image: guacamole/guacamole
+    environment:
+      - MYSQL_HOSTNAME=guac-mysql
+      - MYSQL_DATABASE=guacamole_db
+      - MYSQL_USER=guacamole_user
+      - MYSQL_PASSWORD=ENTER_MYSQL_PASSWORD_FROM_ABOVE
+      - GUACD_HOSTNAME=guacd
+      - GUACD_PORT=4822
+    ports:
+      - 8080:8080
