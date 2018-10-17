@@ -8,7 +8,7 @@ questions:
 objectives:
 - "Provide hints on efficient use of the collected shell history of commands"
 - "Explain how to make shell scripts more robust and less dangerous"
-keypoints:
+keypoints: 
 - "A command line shell is a powerful tool and learning additional
  'tricks' can help make its use more efficient, less error-prone, and
  thus more reproducible"
@@ -72,7 +72,8 @@ The `man` command provides access to manpages available for many (if
 not the majority) of the available commands.  Manpages often provide a
 very detailed description and consist of many pages of textual
 documentation.  It gets presented to you in a `pager`---a basic command
-for viewing and navigation of the text file.  The most common pages are
+for viewing and navigation of the text file. The `pager` to be used is specified
+as an environment variable, `$PAGER`, two common examples of which are
 `more` and `less`.  Some useful `less` shortcuts include
 
 - <kbd>h</kbd> - help
@@ -80,7 +81,7 @@ for viewing and navigation of the text file.  The most common pages are
 - <kbd>></kbd>, <kbd>End</kbd> - end of the document
 - <KBD>SPACE</KBD>, <kbd>PgDn</kbd>, <kbd>f</kbd> - page down
 - <kbd>PgUp</kbd>, <kbd>b</kbd> - page up
-- <kbd>/</kbd> - search
+- <kbd>/</kbd> - search, <kbd>n</kbd> - next instance of search term
 - <kbd>q</kbd> - exit
 
 
@@ -98,6 +99,8 @@ names.
 > > ## Solution
 > > ~~~
 > > % man -k containers
+> > If you don't use containers, instead of the last command try 
+> > % man -k shell 
 > > ~~~
 > > {: .bash}
 > {: .solution}
@@ -131,6 +134,21 @@ impact what external commands and libraries you are using.
 
 #### PATH - determines the full path to the command to be executed
 
+> ## Excercise: what is the path in the environment right now
+> 
+> Simply print the current path in the terminal
+> 
+>  ~~~
+>  % echo $PATH
+>  ~~~
+> {: .bash}
+{: .solution}
+
+Different paths are separated by `:` (For Windows, `;`). The order
+in which we look packages is determined by the order of paths separated
+by `:`
+
+
 > ## Excercise: determine which program (full path to it) executes when you run `git`
 >
 > To see which command will actually be run use `which COMMAND`:
@@ -143,6 +161,15 @@ impact what external commands and libraries you are using.
 >
 > What about the `python` command?   Try `which -a` as well.
 >
+> ~~~
+> % which -a python
+> ~~~
+> {: .bash}
+>
+> `which -a` is a neat way to see all the versions of a 
+> package you have available across paths in the environment, listed
+> in the order of paths specified in $PATH environment variable.
+>  
 > Do not mix up `which` with `locate`, which (if available) would just
 > find a file with that word somewhere in the file name/path.
 >
@@ -235,10 +262,13 @@ remember running.  Hitting <kbd>Ctrl-r</kbd> again will bring up the next match
 and so on. You will leave "search" mode as soon as you use some other
 command line navigation command (e.g. <kbd>Ctrl-e</kbd>).
 
+If you have had enough of searching with <kbd>Ctrl-r</kbd> you can simply <kbd>Ctrl-c</kbd>
+to exit incremental search, while still leaving the last search term on the terminal.
+
 <kbd>Alt-.</kbd> | Insert last position argument of the previous command.
 
 Hitting <kbd>Alt-.</kbd> again will bring up the last argument of the previous
-command and so on.
+command and so on. Mac users will have to use <kbd>Esc-.</kbd>
 
 > ## History navigation exercise
 >
