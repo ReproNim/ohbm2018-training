@@ -1,3 +1,10 @@
+# READ THIS FIRST!  NEWER VERSION IS AVAILABLE
+
+This is a now archived version of the workshop materials as were used at
+OHBM 2018.  No further changes would be done to it.  For an updated
+version, please visit/follow e.g. a 
+[SfN 2018](https://github.com/ReproNim/sfn2018-training) version.
+
 # Instructions
 ## Install VirtualBox
 - Go to the VirtualBox Download page: https://www.virtualbox.org/wiki/Downloads
